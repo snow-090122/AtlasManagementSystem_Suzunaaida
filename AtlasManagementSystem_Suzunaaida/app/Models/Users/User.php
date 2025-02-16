@@ -8,20 +8,14 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Posts\Like;
+use App\Models\Subjects\Subject;
 use Auth;
 
 class User extends Authenticatable
 {
     use Notifiable;
-    use softDeletes;
+    use SoftDeletes;
 
-    // const CREATED_AT = null;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'over_name',
         'under_name',
@@ -36,46 +30,44 @@ class User extends Authenticatable
 
     protected $dates = ['deleted_at'];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
-        'password', 'remember_token',
+        'password',
+        'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
-    public function posts(){
+    public function posts()
+    {
         return $this->hasMany('App\Models\Posts\Post');
     }
 
-    public function calendars(){
+    public function calendars()
+    {
         return $this->belongsToMany('App\Models\Calendars\Calendar', 'calendar_users', 'user_id', 'calendar_id')->withPivot('user_id', 'id');
     }
 
-    public function reserveSettings(){
+    public function reserveSettings()
+    {
         return $this->belongsToMany('App\Models\Calendars\ReserveSettings', 'reserve_setting_users', 'user_id', 'reserve_setting_id')->withPivot('id');
     }
 
-    public function subjects(){
-        return ;// リレーションの定義
+    // subjects とのリレーションを定義
+    public function subjects()
+    {
+        return $this->hasMany(Subject::class, 'user_id');
     }
 
     // いいねしているかどうか
-    public function is_Like($post_id){
+    public function is_Like($post_id)
+    {
         return Like::where('like_user_id', Auth::id())->where('like_post_id', $post_id)->first(['likes.id']);
     }
 
-    public function likePostId(){
+    public function likePostId()
+    {
         return Like::where('like_user_id', Auth::id());
     }
 }
