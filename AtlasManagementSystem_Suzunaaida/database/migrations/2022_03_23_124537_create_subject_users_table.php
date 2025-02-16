@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubjectUsersTable extends Migration
+class CreateSubjectsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateSubjectUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('subject_users', function (Blueprint $table) {
+        Schema::create('subjects', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id')->comment('ユーザーID');
-            $table->integer('subject_id')->unsigned()->comment('選択科目ID');
-            $table->timestamps(); // created_at と updated_at を自動で追加
-
-            // 外部キー制約の追加
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
+            $table->string('subject', 60)->comment('科目名');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->comment('ユーザーID');
+            $table->timestamp('created_at')->nullable()->comment('登録日時');
         });
     }
 
@@ -32,6 +28,6 @@ class CreateSubjectUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subject_users');
+        Schema::dropIfExists('subjects');
     }
 }

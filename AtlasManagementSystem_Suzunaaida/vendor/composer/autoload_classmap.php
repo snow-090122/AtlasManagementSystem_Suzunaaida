@@ -46,6 +46,7 @@ return array(
     'App\\Models\\Posts\\Like' => $baseDir . '/app/Models/Posts/Like.php',
     'App\\Models\\Posts\\Post' => $baseDir . '/app/Models/Posts/Post.php',
     'App\\Models\\Posts\\PostComment' => $baseDir . '/app/Models/Posts/PostComment.php',
+    'App\\Models\\Subjects\\Subject' => $baseDir . '/app/Models/Subjects/Subject.php',
     'App\\Models\\Users\\User' => $baseDir . '/app/Models/Users/User.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
     'App\\Providers\\AuthServiceProvider' => $baseDir . '/app/Providers/AuthServiceProvider.php',

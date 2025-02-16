@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use DB;
 
-use App\Models\Users\Subjects;
+use App\Models\Subjects\Subject;
 use App\Models\Users\User;
 
 class RegisteredUserController extends Controller
@@ -23,7 +23,7 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        $subjects = Subjects::all();
+        $subjects = Subject::all();
         return view('auth.register.register', compact('subjects'));
     }
 
@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
     public function store(Request $request)
     {
         DB::beginTransaction();
-        try{
+        try {
             $old_year = $request->old_year;
             $old_month = $request->old_month;
             $old_day = $request->old_day;
@@ -57,13 +57,13 @@ class RegisteredUserController extends Controller
                 'role' => $request->role,
                 'password' => bcrypt($request->password)
             ]);
-            if($request->role == 4){
+            if ($request->role == 4) {
                 $user = User::findOrFail($user_get->id);
                 $user->subjects()->attach($subjects);
             }
             DB::commit();
             return view('auth.login.login');
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
             return redirect()->route('loginView');
         }

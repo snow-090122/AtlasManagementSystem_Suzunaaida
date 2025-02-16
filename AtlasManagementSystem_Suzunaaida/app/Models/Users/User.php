@@ -6,10 +6,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Posts\Like;
 use App\Models\Subjects\Subject;
-use Auth;
+
 
 class User extends Authenticatable
 {
@@ -70,4 +72,9 @@ class User extends Authenticatable
     {
         return Like::where('like_user_id', Auth::id());
     }
+    public function getAuthIdentifierName()
+    {
+        return 'mail_address';
+    }
+
 }

@@ -144,11 +144,11 @@
         <div class="select_teacher d-none">
           <label class="d-block m-0" style="font-size:13px">選択科目</label>
           @foreach($subjects as $subject)
-          <div class="">
-            <input type="checkbox" name="subject[]" value="{{ $subject->id }}">
-            <label>{{ $subject->subject }}</label>
-          </div>
-          @endforeach
+        <div class="">
+        <input type="checkbox" name="subject[]" value="{{ $subject->id }}">
+        <label>{{ $subject->subject }}</label>
+        </div>
+      @endforeach
         </div>
         <div class="mt-3">
           <label class="d-block m-0" style="font-size:13px">パスワード</label>
@@ -166,7 +166,7 @@
           <input type="submit" class="btn btn-primary register_btn" disabled value="新規登録" onclick="return confirm('登録してよろしいですか？')">
         </div>
         <div class="text-center">
-          <a href="{{ route('loginView') }}">ログイン</a>
+          <a href="{{ route('login') }}">ログイン</a>
         </div>
       </div>
       {{ csrf_field() }}

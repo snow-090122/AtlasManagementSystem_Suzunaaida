@@ -3,7 +3,7 @@
 namespace App\Models\Subjects;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Users\User;
 
 class Subject extends Model
@@ -16,7 +16,7 @@ class Subject extends Model
         'user_id',
     ];
 
-    public function users()
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
