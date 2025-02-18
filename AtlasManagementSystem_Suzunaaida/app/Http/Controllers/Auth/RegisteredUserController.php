@@ -65,7 +65,7 @@ class RegisteredUserController extends Controller
             return view('auth.login.login');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('loginView');
+            return redirect()->route('login');
         }
     }
 }

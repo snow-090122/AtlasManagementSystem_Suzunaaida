@@ -5,12 +5,18 @@
         <div class="register_form">
           <div class="d-flex mt-3" style="justify-content:space-between">
             <div class="" style="width:140px">
+              @if ($errors->has('over_name'))
+          <p class="text-danger" style="font-size:12px;">{{ $errors->first('over_name') }}</p>
+        @endif
               <label class="d-block m-0" style="font-size:13px">姓</label>
               <div class="border-bottom border-primary" style="width:140px;">
                 <input type="text" style="width:140px;" class="border-0 over_name" name="over_name">
               </div>
             </div>
             <div class="" style="width:140px">
+              @if ($errors->has('under_name'))
+          <p class="text-danger" style="font-size:12px;">{{ $errors->first('under_name') }}</p>
+        @endif
               <label class=" d-block m-0" style="font-size:13px">名</label>
               <div class="border-bottom border-primary" style="width:140px;">
                 <input type="text" style="width:140px;" class="border-0 under_name" name="under_name">
@@ -19,12 +25,18 @@
           </div>
           <div class="d-flex mt-3" style="justify-content:space-between">
             <div class="" style="width:140px">
+              @if ($errors->has('over_name_kana'))
+          <p class="text-danger" style="font-size:12px;">{{ $errors->first('over_name_kana') }}</p>
+        @endif
               <label class="d-block m-0" style="font-size:13px">セイ</label>
               <div class="border-bottom border-primary" style="width:140px;">
                 <input type="text" style="width:140px;" class="border-0 over_name_kana" name="over_name_kana">
               </div>
             </div>
             <div class="" style="width:140px">
+              @if ($errors->has('under_name_kana'))
+          <p class="text-danger" style="font-size:12px;">{{ $errors->first('under_name_kana') }}</p>
+        @endif
               <label class="d-block m-0" style="font-size:13px">メイ</label>
               <div class="border-bottom border-primary" style="width:140px;">
                 <input type="text" style="width:140px;" class="border-0 under_name_kana" name="under_name_kana">
@@ -32,6 +44,9 @@
             </div>
           </div>
           <div class="mt-3">
+            @if ($errors->has('mail_address'))
+        <p class="text-danger" style="font-size:12px;">{{ $errors->first('mail_address') }}</p>
+      @endif
             <label class="m-0 d-block" style="font-size:13px">メールアドレス</label>
             <div class="border-bottom border-primary">
               <input type="mail" class="w-100 border-0 mail_address" name="mail_address">
@@ -141,7 +156,7 @@
           <input type="radio" name="role" class="other_role role" value="4">
           <label style="font-size:13px" class="other_role">生徒</label>
         </div>
-        <div class="select_teacher d-none">
+        <!-- <div class="select_teacher d-none">
           <label class="d-block m-0" style="font-size:13px">選択科目</label>
           @foreach($subjects as $subject)
         <div class="">
@@ -149,14 +164,20 @@
         <label>{{ $subject->subject }}</label>
         </div>
       @endforeach
-        </div>
+        </div> -->
         <div class="mt-3">
+          @if ($errors->has('password'))
+        <p class="text-danger" style="font-size:12px;">{{ $errors->first('password') }}</p>
+      @endif
           <label class="d-block m-0" style="font-size:13px">パスワード</label>
           <div class="border-bottom border-primary">
             <input type="password" class="border-0 w-100 password" name="password">
           </div>
         </div>
         <div class="mt-3">
+          @if ($errors->has('password_confirmation'))
+        <p class="text-danger" style="font-size:12px;">{{ $errors->first('password_confirmation') }}</p>
+      @endif
           <label class="d-block m-0" style="font-size:13px">確認用パスワード</label>
           <div class="border-bottom border-primary">
             <input type="password" class="border-0 w-100 password_confirmation" name="password_confirmation">
