@@ -63,32 +63,18 @@ $(function () {
     return false;
   });
 
-});
-
-$(function () {
-  const csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-  $(document).on('click', '.delete-btn', function () {
-    let postId = $(this).attr('data-post-id');
-    $('#deleteConfirmModal').modal('show');
-    $('#deleteConfirmBtn').attr('data-post-id', postId);
+  $('.delete-modal-open').on('click', function () {
+    $('.js-delete-modal').fadeIn();
+    var post_id = $(this).attr('post_id');
+    $('.delete-modal-hidden').val(post_id);
+    $('.delete-form').attr('action', '/bulletin_board/delete/' + post_id);
+    return false;
   });
 
-  $('#deleteConfirmBtn').on('click', function () {
-    let postId = $(this).attr('data-post-id');
-
-    $.ajax({
-      headers: { 'X-CSRF-TOKEN': csrfToken },
-      method: "POST",
-      url: "/post/delete/" + postId,
-      data: { _method: "DELETE" },
-    }).done(function (res) {
-      console.log("削除成功:", res);
-      $('#deleteConfirmModal').modal('hide');
-      $('#post-' + postId).fadeOut();
-    }).fail(function () {
-      console.log("削除に失敗しました");
-      alert("削除に失敗しました。もう一度試してください。");
-    });
+  $('.js-modal-close').on('click', function () {
+    $('.js-delete-modal').fadeOut();
+    return false;
   });
+
+
 });

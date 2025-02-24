@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\Auth\RegisterRequest;
+use Illuminate\Validation\Rules;
+use DB;
+
 use App\Models\Subjects\Subject;
 use App\Models\Users\User;
 
@@ -14,6 +18,8 @@ class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
+     *
+     * @return \Illuminate\View\View
      */
     public function create()
     {
@@ -23,16 +29,24 @@ class RegisteredUserController extends Controller
 
     /**
      * Handle an incoming registration request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     *
+     * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(RegisterRequest $request)
+    public function store(Request $request)
     {
         DB::beginTransaction();
         try {
-            // 生年月日を結合して `Y-m-d` 形式に変換
-            $birth_day = sprintf('%04d-%02d-%02d', $request->old_year, $request->old_month, $request->old_day);
+            $old_year = $request->old_year;
+            $old_month = $request->old_month;
+            $old_day = $request->old_day;
+            $data = $old_year . '-' . $old_month . '-' . $old_day;
+            $birth_day = date('Y-m-d', strtotime($data));
+            $subjects = $request->subject;
 
-            // ユーザーを作成
-            $user = User::create([
+            $user_get = User::create([
                 'over_name' => $request->over_name,
                 'under_name' => $request->under_name,
                 'over_name_kana' => $request->over_name_kana,
@@ -41,23 +55,17 @@ class RegisteredUserController extends Controller
                 'sex' => $request->sex,
                 'birth_day' => $birth_day,
                 'role' => $request->role,
-                'password' => Hash::make($request->password),
+                'password' => bcrypt($request->password)
             ]);
-
-            // 生徒（role = 4）の場合のみ subjects を関連付ける
             if ($request->role == 4 && !empty($request->subject)) {
-                $user->subjects()->attach($request->subject);
+                $user_get->subjects()->attach($request->subject);
             }
 
             DB::commit();
-
-            // 登録完了後にログインページへリダイレクト
-            return redirect()->route('login')->with('success', '登録が完了しました。');
+            return view('auth.login.login');
         } catch (\Exception $e) {
             DB::rollback();
-
-            // エラーメッセージとともに登録画面にリダイレクト
-            return redirect()->route('register')->with('error', '登録処理に失敗しました。再度お試しください。');
+            return redirect()->route('login');
         }
     }
 }

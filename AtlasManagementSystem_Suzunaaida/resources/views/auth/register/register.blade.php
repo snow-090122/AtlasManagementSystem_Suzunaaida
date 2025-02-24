@@ -153,9 +153,12 @@
           </select>
           <label style="font-size:13px">日</label>
         </div>
-        @error('old_year')        <p class="text-danger">{{ $message }}</p> @enderror
-        @error('old_month')        <p class="text-danger">{{ $message }}</p> @enderror
-        @error('old_day')        <p class="text-danger">{{ $message }}</p> @enderror
+        @error('old_year')
+    <p class="text-danger">{{ $message }}</p> @enderror
+        @error('old_month')
+    <p class="text-danger">{{ $message }}</p> @enderror
+        @error('old_day')
+    <p class="text-danger">{{ $message }}</p> @enderror
 
         <div class="mt-3">
           <label class="d-block m-0" style="font-size:13px">役職</label>

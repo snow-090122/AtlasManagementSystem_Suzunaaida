@@ -7,12 +7,14 @@
             <div>
             </div>
             <div>
-              @if (Auth::id() === $post->user_id)
-          <span class="edit-modal-open" post_title="{{ $post->post_title}}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">
+              @if($post->user_id == Auth::user()->id)
+          <span class="edit-modal-open" post_title="{{ $post->post_title }}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">編集</span>
 
-          <button type="button" class="btn btn-link text-danger delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal" data-post-id="{{ $post->id }}">削除
+          <button type="button" class="delete-modal-open btn btn-danger" post_id="{{ $post->id }}">
+          削除
           </button>
-      @endif
+        @endif
+
             </div>
           </div>
 
@@ -43,7 +45,6 @@
         </div>
       </div>
     </div>
-
     <div class="w-50 p-3">
       <div class="comment_container border m-5">
         <div class="comment_area p-3">
@@ -52,26 +53,6 @@
           <input type="hidden" name="post_id" form="commentRequest" value="{{ $post->id }}">
           <input type="submit" class="btn btn-primary" form="commentRequest" value="投稿">
           <form action="{{ route('comment.create') }}" method="post" id="commentRequest">{{ csrf_field() }}</form>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--削除モーダル-->
-  <div class="modal fade" id="daleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modale-title" id="deleteModalLabel">投稿を削除</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="閉じる"></button>
-        </div>
-        <div class="modal-body">削除してよろしいですか？</div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-          <form id="deleteForm" method="POST" action="">
-            @csrf
-            @method('DELETE')
-            <button type="submit" class="btn btn-danger">削除</button>
-          </form>
         </div>
       </div>
     </div>
@@ -98,4 +79,26 @@
       </form>
     </div>
   </div>
+
+  <div class="modal js-delete-modal">
+    <div class="modal__bg js-modal-close"></div>
+    <div class="modal__content">
+      <form action="" method="post" class="delete-form">
+        <div class="w-100">
+          <div class="modal-inner-title w-50 m-auto text-center">
+            <p>本当にこの投稿を削除しますか？</p>
+          </div>
+          <div class="w-50 m-auto edit-modal-btn d-flex justify-content-around">
+            <a class="js-modal-close btn btn-secondary" href="">キャンセル</a>
+            <input type="hidden" class="delete-modal-hidden" name="post_id" value="">
+            <input type="submit" class="btn btn-danger" value="削除">
+          </div>
+        </div>
+        {{ csrf_field() }}
+        {{ method_field('DELETE') }}
+      </form>
+    </div>
+  </div>
+
+
 </x-sidebar>
