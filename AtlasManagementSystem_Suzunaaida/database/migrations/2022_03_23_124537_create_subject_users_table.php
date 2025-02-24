@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubjectsTable extends Migration
+class CreateSubjectUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateSubjectsTable extends Migration
      */
     public function up()
     {
-        Schema::create('subjects', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('subject', 60)->comment('科目名');
+        Schema::create('subject_users', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->comment('ユーザーID');
-            $table->timestamp('created_at')->nullable()->comment('登録日時');
+            $table->foreignId('subject_id')->constrained()->onDelete('cascade')->comment('科目ID');
+            $table->timestamps();
         });
     }
 
@@ -28,6 +28,6 @@ class CreateSubjectsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('subjects');
+        Schema::dropIfExists('subject_users');
     }
 }

@@ -14,9 +14,9 @@ class CreateSubjectsTable extends Migration
     public function up()
     {
         Schema::create('subjects', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('subject', 60)->comment('科目名');
-            $table->timestamp('created_at')->nullable()->comment('登録日時');
+            $table->id();
+            $table->string('subject', 60)->unique()->comment('科目名');
+            $table->timestamps(); // created_at, updated_at を自動追加
         });
     }
 

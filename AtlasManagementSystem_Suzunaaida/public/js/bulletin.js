@@ -48,7 +48,7 @@ $(function () {
     });
   });
 
-  $('.edit-modal-open').on('click',function(){
+  $('.edit-modal-open').on('click', function () {
     $('.js-modal').fadeIn();
     var post_title = $(this).attr('post_title');
     var post_body = $(this).attr('post_body');
@@ -63,4 +63,32 @@ $(function () {
     return false;
   });
 
+});
+
+$(function () {
+  const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+  $(document).on('click', '.delete-btn', function () {
+    let postId = $(this).attr('data-post-id');
+    $('#deleteConfirmModal').modal('show');
+    $('#deleteConfirmBtn').attr('data-post-id', postId);
+  });
+
+  $('#deleteConfirmBtn').on('click', function () {
+    let postId = $(this).attr('data-post-id');
+
+    $.ajax({
+      headers: { 'X-CSRF-TOKEN': csrfToken },
+      method: "POST",
+      url: "/post/delete/" + postId,
+      data: { _method: "DELETE" },
+    }).done(function (res) {
+      console.log("削除成功:", res);
+      $('#deleteConfirmModal').modal('hide');
+      $('#post-' + postId).fadeOut();
+    }).fail(function () {
+      console.log("削除に失敗しました");
+      alert("削除に失敗しました。もう一度試してください。");
+    });
+  });
 });
