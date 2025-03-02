@@ -25,15 +25,14 @@ class RegisterRequest extends FormRequest
             'under_name' => 'required|string|max:10',
             'over_name_kana' => 'required|string|max:30|regex:/^[ァ-ヶー]+$/u',
             'under_name_kana' => 'required|string|max:30|regex:/^[ァ-ヶー]+$/u',
-            'mail_address' => 'required|email|max:100|unique:users,email',
-            'sex' => ['required', Rule::in([1, 2, 3])],
+            'mail_address' => 'required|email|max:100|unique:users,mail_address',
+            'sex' => ['required', 'integer', Rule::in([1, 2, 3])],
             'birth_date' => [
                 'required',
                 'date',
-                'before_or_equal:today',
-                'after:1999-12-31', // 2000年1月1日以降
+                'before:today -18 years', // 18歳未満は不可
             ],
-            'role' => ['required', Rule::in(['講師(国語)', '講師(数学)', '教師(英語)', '生徒'])],
+            'role' => ['required', 'integer', Rule::in([1, 2, 3, 4])], // 整数のみに変更
             'password' => 'required|string|min:8|max:30|confirmed',
         ];
     }
@@ -68,15 +67,14 @@ class RegisterRequest extends FormRequest
             'mail_address.max' => 'メールアドレスは100文字以内で入力してください。',
 
             'sex.required' => '性別は必須です。',
-            'sex.in' => '性別は「男性」「女性」「その他」のいずれかを選択してください。',
+            'sex.in' => '性別は「1（男性）」「2（女性）」「3（その他）」のいずれかを選択してください。',
 
             'birth_date.required' => '生年月日は必須です。',
             'birth_date.date' => '生年月日は有効な日付を入力してください。',
-            'birth_date.before_or_equal' => '生年月日は今日以前の日付である必要があります。',
-            'birth_date.after' => '生年月日は2000年1月1日以降である必要があります。',
+            'birth_date.before' => '18歳未満は登録できません。',
 
             'role.required' => '役割は必須です。',
-            'role.in' => '役割は「講師(国語)」「講師(数学)」「教師(英語)」「生徒」のいずれかを選択してください。',
+            'role.in' => '役割は「1（国語教師）」「2（数学教師）」「3（英語教師）」「4（生徒）」のいずれかを選択してください。',
 
             'password.required' => 'パスワードは必須です。',
             'password.string' => 'パスワードは文字列で入力してください。',
