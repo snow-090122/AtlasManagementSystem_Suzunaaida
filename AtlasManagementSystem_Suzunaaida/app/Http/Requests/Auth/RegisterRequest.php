@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -26,10 +26,13 @@ class RegisterRequest extends FormRequest
             'over_name_kana' => 'required|string|max:30|regex:/^[ァ-ヶー]+$/u',
             'under_name_kana' => 'required|string|max:30|regex:/^[ァ-ヶー]+$/u',
             'mail_address' => 'required|email|max:100|unique:users,email',
-            'sex' => ['required', Rule::in(['男性', '女性', 'その他'])],
-            'old_year' => 'required|integer|min:2000|max:' . date('Y'),
-            'old_month' => 'required|integer|min:1|max:12',
-            'old_day' => 'required|integer|min:1|max:31',
+            'sex' => ['required', Rule::in([1, 2, 3])],
+            'birth_date' => [
+                'required',
+                'date',
+                'before_or_equal:today',
+                'after:1999-12-31', // 2000年1月1日以降
+            ],
             'role' => ['required', Rule::in(['講師(国語)', '講師(数学)', '教師(英語)', '生徒'])],
             'password' => 'required|string|min:8|max:30|confirmed',
         ];
@@ -67,20 +70,10 @@ class RegisterRequest extends FormRequest
             'sex.required' => '性別は必須です。',
             'sex.in' => '性別は「男性」「女性」「その他」のいずれかを選択してください。',
 
-            'old_year.required' => '生年は必須です。',
-            'old_year.integer' => '生年は数値で入力してください。',
-            'old_year.min' => '生年は2000年以降である必要があります。',
-            'old_year.max' => '生年は現在の年以下である必要があります。',
-
-            'old_month.required' => '生月は必須です。',
-            'old_month.integer' => '生月は数値で入力してください。',
-            'old_month.min' => '生月は1以上である必要があります。',
-            'old_month.max' => '生月は12以下である必要があります。',
-
-            'old_day.required' => '生日は必須です。',
-            'old_day.integer' => '生日は数値で入力してください。',
-            'old_day.min' => '生日は1以上である必要があります。',
-            'old_day.max' => '生日は31以下である必要があります。',
+            'birth_date.required' => '生年月日は必須です。',
+            'birth_date.date' => '生年月日は有効な日付を入力してください。',
+            'birth_date.before_or_equal' => '生年月日は今日以前の日付である必要があります。',
+            'birth_date.after' => '生年月日は2000年1月1日以降である必要があります。',
 
             'role.required' => '役割は必須です。',
             'role.in' => '役割は「講師(国語)」「講師(数学)」「教師(英語)」「生徒」のいずれかを選択してください。',

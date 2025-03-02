@@ -48,20 +48,62 @@ $(function () {
     });
   });
 
-  $('.edit-modal-open').on('click', function () {
-    $('.js-modal').fadeIn();
-    var post_title = $(this).attr('post_title');
-    var post_body = $(this).attr('post_body');
-    var post_id = $(this).attr('post_id');
-    $('.modal-inner-title input').val(post_title);
-    $('.modal-inner-body textarea').text(post_body);
-    $('.edit-modal-hidden').val(post_id);
-    return false;
+  $(document).ready(function () {
+
+    $('.edit-modal-open').on('click', function () {
+      $('.js-modal').fadeIn();
+
+      var post_title = $(this).attr('post_title');
+      var post_body = $(this).attr('post_body');
+      var post_id = $(this).attr('post_id');
+
+      $('.modal-inner-title input').val(post_title);
+      $('.modal-inner-body textarea').val(post_body);
+      $('.edit-modal-hidden').val(post_id);
+
+      return false;
+    });
+
+    $('.js-modal-close').on('click', function () {
+      $('.js-modal').fadeOut();
+      $('.error-message').remove();
+      return false;
+    });
+
+    $('.edit-modal-btn input[type="submit"]').on('click', function (e) {
+      e.preventDefault();
+      let form = $(this).closest("form");
+      let formData = new FormData(form[0]);
+      let actionUrl = form.attr("action");
+
+      $.ajax({
+        url: actionUrl,
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if (response.success) {
+            $(".detsail_post_title").text(response.updated_title);
+            $(".detsail_post").text(response.updated_body);
+
+            $(".js-modal").fadeOut();
+            $('.error-message').remove();
+          }
+        },
+        error: function (xhr) {
+          let errors = xhr.responseJSON.errors;
+          $(".error-message").remove();
+          if (errors) {
+            $.each(errors, function (key, value) {
+              $(`[name="${key}"]`).after(`<div class="text-danger error-message">${value}</div>`);
+            });
+          }
+        }
+      });
+    });
   });
-  $('.js-modal-close').on('click', function () {
-    $('.js-modal').fadeOut();
-    return false;
-  });
+
 
   $('.delete-modal-open').on('click', function () {
     $('.js-delete-modal').fadeIn();

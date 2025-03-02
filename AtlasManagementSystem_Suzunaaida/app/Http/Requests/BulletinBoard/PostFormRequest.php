@@ -30,11 +30,12 @@ class PostFormRequest extends FormRequest
         ];
     }
 
+
     public function messages()
     {
         return [
-            // 'post_category_id.required' => 'カテゴリーを選択してください。',
-            // 'post_category_id.exists' => '選択されたカテゴリーが存在しません。',
+            'post_category_id.required' => 'カテゴリーを選択してください。',
+            'post_category_id.exists' => '選択されたカテゴリーが存在しません。',
             'post_title.required' => 'タイトルは必ず入力してください。',
             'post_title.string' => 'タイトルは文字列である必要があります。',
             'post_title.max' => 'タイトルは100文字以内で入力してください。',
