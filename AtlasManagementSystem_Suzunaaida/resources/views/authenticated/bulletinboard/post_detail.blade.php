@@ -13,7 +13,6 @@
           削除
           </button>
         @endif
-
             </div>
           </div>
 
@@ -34,9 +33,10 @@
             @foreach($post->postComments as $comment)
           <div class="comment_area border-top">
             <p>
-          <span>{{ $comment->commentUser($comment->user_id)->over_name }}</span>
-          <span>{{ $comment->commentUser($comment->user_id)->under_name }}</span>さん
-        </p>
+        <span>{{ $comment->user->over_name }}</span>
+        <span>{{ $comment->user->under_name }}</span>
+        さん
+          </p>
             <p>{{ $comment->comment }}</p>
           </div>
       @endforeach
@@ -48,6 +48,9 @@
       <div class="comment_container border m-5">
         <div class="comment_area p-3">
           <p class="m-0">コメントする</p>
+          @error('comment')
+        <div class="text-danger">{{ $message }}</div>
+      @enderror
           <textarea class="w-100" name="comment" form="commentRequest"></textarea>
           <input type="hidden" name="post_id" form="commentRequest" value="{{ $post->id }}">
           <input type="submit" class="btn btn-primary" form="commentRequest" value="投稿">

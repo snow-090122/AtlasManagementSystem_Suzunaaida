@@ -39,6 +39,7 @@ return array(
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Http\\Requests\\Auth\\LoginRequest' => $baseDir . '/app/Http/Requests/Auth/LoginRequest.php',
     'App\\Http\\Requests\\Auth\\RegisterRequest' => $baseDir . '/app/Http/Requests/Auth/RegisterRequest.php',
+    'App\\Http\\Requests\\BulletinBoard\\CommentRequest' => $baseDir . '/app/Http/Requests/BulletinBoard/CommentRequest.php',
     'App\\Http\\Requests\\BulletinBoard\\PostFormRequest' => $baseDir . '/app/Http/Requests/BulletinBoard/PostFormRequest.php',
     'App\\Models\\Calendars\\ReserveSettings' => $baseDir . '/app/Models/Calendars/ReserveSettings.php',
     'App\\Models\\Categories\\MainCategory' => $baseDir . '/app/Models/Categories/MainCategory.php',

@@ -12,13 +12,16 @@ use App\Models\Posts\Like;
 use App\Models\Users\User;
 use App\Http\Requests\BulletinBoard\PostFormRequest;
 use Auth;
+use App\Http\Requests\BulletinBoard\CommentRequest;
+
+
 
 class PostsController extends Controller
 {
     public function show(Request $request)
     {
         $posts = Post::with(['user', 'postComments', 'likes'])
-            ->withCount('likes')
+            ->withCount('likes', 'postComments')
             ->latest();
 
         if (!empty($request->keyword)) {
@@ -136,21 +139,24 @@ class PostsController extends Controller
         return redirect()->route('post.input');
     }
 
-    public function commentCreate(Request $request)
+    public function commentCreate(CommentRequest $request)
     {
-        $request->validate([
-            'post_id' => 'required|exists:posts,id',
-            'comment' => 'required|string|max:500'
-        ]);
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->back()->withErrors('ログインしていません。');
+        }
 
         PostComment::create([
             'post_id' => $request->post_id,
-            'user_id' => Auth::id(),
+            'user_id' => $user->id,
             'comment' => $request->comment
         ]);
 
-        return redirect()->route('post.detail', ['id' => $request->post_id]);
+        return redirect()->back()->with('success', 'コメントを投稿しました。');
     }
+
+
 
     public function myBulletinBoard()
     {
@@ -218,6 +224,5 @@ class PostsController extends Controller
             'like_count' => max(0, Like::where('like_post_id', $post_id)->count())
         ]);
     }
-
 
 }
