@@ -8,11 +8,11 @@ class Like extends Model
 {
     protected $fillable = [
         'like_user_id',
-        'like_post_id'
+        'like_post_id',
     ];
 
-    public static function likeCounts($post_id)
+    public function post()
     {
-        return self::where('like_post_id', $post_id)->count();
+        return $this->belongsTo(Post::class, 'like_post_id');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models\Posts;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Posts\Like;
 
 class Post extends Model
 {
@@ -30,10 +31,15 @@ class Post extends Model
         // リレーションの定義
     }
 
-
-    // コメント数
-    public function commentCounts($post_id)
+    // いいねのリレーションを定義
+    public function likes()
     {
-        return Post::with('postComments')->find($post_id)->postComments();
+        return $this->hasMany(Like::class, 'like_post_id');
+    }
+
+    // いいね数を取得するメソッド
+    public function likeCounts()
+    {
+        return $this->likes()->count();
     }
 }

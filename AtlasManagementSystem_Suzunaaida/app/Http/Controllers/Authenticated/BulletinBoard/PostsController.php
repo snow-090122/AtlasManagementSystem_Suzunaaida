@@ -17,7 +17,9 @@ class PostsController extends Controller
 {
     public function show(Request $request)
     {
-        $posts = Post::with('user', 'postComments')->latest();
+        $posts = Post::with(['user', 'postComments', 'likes'])
+            ->withCount('likes')
+            ->latest();
 
         if (!empty($request->keyword)) {
             $posts->where(function ($query) use ($request) {
@@ -43,12 +45,26 @@ class PostsController extends Controller
         }
 
         $posts = $posts->get();
-        $categories = MainCategory::all();
-        $like = new Like;
-        $post_comment = new Post;
 
-        return view('authenticated.bulletinboard.posts', compact('posts', 'categories', 'like', 'post_comment'));
+        $categories = MainCategory::all();
+
+        return view('authenticated.bulletinboard.posts', compact('posts', 'categories'));
     }
+
+
+    public function likeBulletinBoard()
+    {
+        $like_post_ids = Like::where('like_user_id', Auth::id())->pluck('like_post_id');
+
+        $posts = Post::with('user')
+            ->withCount('likes')
+            ->whereIn('id', $like_post_ids)
+            ->latest()
+            ->get();
+
+        return view('authenticated.bulletinboard.post_like', compact('posts'));
+    }
+
 
     public function postDetail($post_id)
     {
@@ -110,6 +126,7 @@ class PostsController extends Controller
         return redirect()->route('post.show');
     }
 
+
     public function mainCategoryCreate(Request $request)
     {
         $request->validate(['main_category_name' => 'required|string|max:255']);
@@ -143,31 +160,29 @@ class PostsController extends Controller
         return view('authenticated.bulletinboard.post_myself', compact('posts', 'like'));
     }
 
-    public function likeBulletinBoard()
-    {
-        $like_post_ids = Like::where('like_user_id', Auth::id())->pluck('like_post_id');
-        $posts = Post::with('user')->whereIn('id', $like_post_ids)->latest()->get();
-        $like = new Like;
-
-        return view('authenticated.bulletinboard.post_like', compact('posts', 'like'));
-    }
-
     public function postLike(Request $request)
     {
         $request->validate([
             'post_id' => 'required|exists:posts,id'
         ]);
 
-        $user_id = Auth::id();
+        $user = Auth::user(); // ユーザー情報を取得
         $post_id = $request->post_id;
 
-        $existing_like = Like::where('like_user_id', $user_id)
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ユーザーが認証されていません。'
+            ], 401);
+        }
+
+        $existing_like = Like::where('like_user_id', $user->id)
             ->where('like_post_id', $post_id)
-            ->first();
+            ->exists();
 
         if (!$existing_like) {
             Like::create([
-                'like_user_id' => $user_id,
+                'like_user_id' => $user->id,
                 'like_post_id' => $post_id,
             ]);
         }
@@ -184,16 +199,25 @@ class PostsController extends Controller
             'post_id' => 'required|exists:posts,id'
         ]);
 
-        $user_id = Auth::id();
+        $user = Auth::user();
         $post_id = $request->post_id;
 
-        Like::where('like_user_id', $user_id)
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ユーザーが認証されていません。'
+            ], 401);
+        }
+
+        Like::where('like_user_id', $user->id)
             ->where('like_post_id', $post_id)
             ->delete();
 
         return response()->json([
             'success' => true,
-            'like_count' => Like::where('like_post_id', $post_id)->count()
+            'like_count' => max(0, Like::where('like_post_id', $post_id)->count())
         ]);
     }
+
+
 }

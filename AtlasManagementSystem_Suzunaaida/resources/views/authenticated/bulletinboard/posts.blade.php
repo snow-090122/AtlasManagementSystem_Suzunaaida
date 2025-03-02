@@ -12,22 +12,21 @@
           <i class="fa fa-comment"></i><span class=""></span>
         </div>
         <div>
-@if(Auth::user()->is_Like($post->id))
-<p class="m-0">
-  <i class="fas fa-heart un_like_btn" post_id="{{ $post->id }}"></i>
-  <span class="like_counts like_counts{{ $post->id }}">
-    {{ \App\Models\Posts\Like::where('like_post_id', $post->id)->count() }}
-  </span>
-</p>
-@else
-<p class="m-0">
-  <i class="fas fa-heart like_btn" post_id="{{ $post->id }}"></i>
-  <span class="like_counts like_counts{{ $post->id }}">
-    {{ \App\Models\Posts\Like::where('like_post_id', $post->id)->count() }}
-  </span>
-</p>
-@endif
-
+          @if(Auth::user()->is_Like($post->id))
+        <p class="m-0">
+      <i class="fas fa-heart un_like_btn" post_id="{{ $post->id }}"></i>
+      <span class="like_counts like_counts{{ $post->id }}">
+      {{ max(0, $post->likes_count) }}
+      </span>
+      </p>
+      @else
+        <p class="m-0">
+      <i class="fas fa-heart like_btn" post_id="{{ $post->id }}"></i>
+      <span class="like_counts like_counts{{ $post->id }}">
+      {{ max(0, $post->likes_count) }}
+      </span>
+      </p>
+    @endif
         </div>
         </div>
       </div>
