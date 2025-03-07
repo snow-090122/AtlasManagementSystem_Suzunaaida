@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Authenticated\BulletinBoard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
 use App\Models\Categories\MainCategory;
 use App\Models\Categories\SubCategory;
 use App\Models\Posts\Post;
@@ -129,32 +130,16 @@ class PostsController extends Controller
         return redirect()->route('post.show');
     }
 
-
     public function mainCategoryCreate(Request $request)
     {
-        $request->validate(['main_category_name' => 'required|string|max:255']);
-
-        MainCategory::create(['main_category' => $request->main_category_name]);
-
-        return redirect()->route('post.input');
-    }
-
-    public function commentCreate(CommentRequest $request)
-    {
-        $user = Auth::user();
-
-        if (!$user) {
-            return redirect()->back()->withErrors('ログインしていません。');
+        try {
+            MainCategory::create(['main_category' => $request->main_category_name]);
+            return redirect()->route('post.input')->with('success', 'メインカテゴリーを追加しました！');
+        } catch (QueryException $e) {
+            return redirect()->back()->withErrors('このメインカテゴリーはすでに登録されています。');
         }
-
-        PostComment::create([
-            'post_id' => $request->post_id,
-            'user_id' => $user->id,
-            'comment' => $request->comment
-        ]);
-
-        return redirect()->back()->with('success', 'コメントを投稿しました。');
     }
+
 
 
 
@@ -223,6 +208,28 @@ class PostsController extends Controller
             'success' => true,
             'like_count' => max(0, Like::where('like_post_id', $post_id)->count())
         ]);
+    }
+    public function subCategoryCreate(PostFormRequest $request)
+    {
+        try {
+            if (
+                SubCategory::where('sub_category', $request->sub_category_name)
+                    ->where('main_category_id', $request->main_category_id)
+                    ->exists()
+            ) {
+                return redirect()->back()->withErrors('このサブカテゴリーはすでに登録されています。');
+            }
+
+            SubCategory::create([
+                'sub_category' => $request->sub_category_name,
+                'main_category_id' => $request->main_category_id
+            ]);
+
+            return redirect()->route('post.input')->with('success', 'サブカテゴリーを追加しました！');
+
+        } catch (QueryException $e) {
+            return redirect()->back()->withErrors('このサブカテゴリーはすでに登録されています。');
+        }
     }
 
 }
