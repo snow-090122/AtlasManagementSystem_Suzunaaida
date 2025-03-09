@@ -40,7 +40,7 @@ class PostsController extends Controller
         }
 
         if ($request->like_posts) {
-            $likes = Auth::user()->likePostId()->pluck('like_post_id');
+            $likes = Auth::user()->likePostId();
             $posts->whereIn('id', $likes);
         }
 
@@ -49,12 +49,12 @@ class PostsController extends Controller
         }
 
         $posts = $posts->get();
-
         $categories = MainCategory::all();
 
-        return view('authenticated.bulletinboard.posts', compact('posts', 'categories'));
-    }
+        $liked_posts = Auth::user() ? Auth::user()->likePostId() : [];
 
+        return view('authenticated.bulletinboard.posts', compact('posts', 'categories', 'liked_posts'));
+    }
 
     public function likeBulletinBoard()
     {
@@ -230,6 +230,23 @@ class PostsController extends Controller
         } catch (QueryException $e) {
             return redirect()->back()->withErrors('このサブカテゴリーはすでに登録されています。');
         }
+    }
+
+    public function commentCreate(CommentRequest $request)
+    {
+        $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->back()->withErrors('ログインしていません。');
+        }
+
+        PostComment::create([
+            'post_id' => $request->post_id,
+            'user_id' => $user->id,
+            'comment' => $request->comment
+        ]);
+
+        return redirect()->back()->with('success', 'コメントを投稿しました。');
     }
 
 }

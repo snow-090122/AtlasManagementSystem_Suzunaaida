@@ -4,62 +4,66 @@
       <div class="m-3 detail_container">
         <div class="p-3">
           <div class="detail_inner_head">
-            <div>
-            </div>
+            <div></div>
             <div>
               @if($post->user_id == Auth::user()->id)
           <span class="edit-modal-open" post_title="{{ $post->post_title }}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">編集</span>
-          <button type="button" class="delete-modal-open btn btn-danger" post_id="{{ $post->id }}">
-          削除
-          </button>
+          <button type="button" class="delete-modal-open btn btn-danger" post_id="{{ $post->id }}">削除</button>
         @endif
             </div>
           </div>
 
           <div class="contributor d-flex">
             <p>
-            <span>{{ $post->user->over_name }}</span>
-            <span>{{ $post->user->under_name }}</span>
-            さん
-          </p>
+              <span>{{ $post->user->over_name }}</span>
+              <span>{{ $post->user->under_name }}</span> さん
+            </p>
             <span class="ml-5">{{ $post->created_at }}</span>
           </div>
           <div class="detsail_post_title">{{ $post->post_title }}</div>
           <div class="mt-3 detsail_post">{{ $post->post }}</div>
         </div>
+
         <div class="p-3">
           <div class="comment_container">
-            <span class="">コメント</span>
+            <span>コメント</span>
             @foreach($post->postComments as $comment)
-          <div class="comment_area border-top">
-            <p>
-        <span>{{ $comment->user->over_name }}</span>
-        <span>{{ $comment->user->under_name }}</span>
-        さん
+        <div class="comment_area border-top">
+          <p>
+            <span>{{ $comment->user->over_name }}</span>
+            <span>{{ $comment->user->under_name }}</span> さん
           </p>
-            <p>{{ $comment->comment }}</p>
-          </div>
+          <p>{{ $comment->comment }}</p>
+        </div>
       @endforeach
           </div>
         </div>
       </div>
     </div>
+
     <div class="w-50 p-3">
       <div class="comment_container border m-5">
         <div class="comment_area p-3">
           <p class="m-0">コメントする</p>
-          @error('comment')
-        <div class="text-danger">{{ $message }}</div>
-      @enderror
-          <textarea class="w-100" name="comment" form="commentRequest"></textarea>
-          <input type="hidden" name="post_id" form="commentRequest" value="{{ $post->id }}">
-          <input type="submit" class="btn btn-primary" form="commentRequest" value="投稿">
-          <form action="{{ route('comment.create') }}" method="post" id="commentRequest">{{ csrf_field() }}</form>
+          <form action="{{ route('comment.create') }}" method="post" id="commentRequest">
+            {{ csrf_field() }}
+            @if ($errors->has('comment'))
+        <ul class="text-danger">
+          @foreach ($errors->get('comment') as $message)
+        <li>{{ $message }}</li>
+      @endforeach
+        </ul>
+      @endif
+            <textarea class="w-100" name="comment"></textarea>
+            <input type="hidden" name="post_id" value="{{ $post->id }}">
+            <input type="submit" class="btn btn-primary" value="投稿">
+          </form>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- 編集モーダル -->
   <div class="modal js-modal">
     <div class="modal__bg js-modal-close"></div>
     <div class="modal__content">
@@ -67,12 +71,24 @@
         <div class="w-100">
           <div class="modal-inner-title w-50 m-auto">
             <input type="text" name="post_title" placeholder="タイトル" class="w-100" value="{{ old('post_title', $post->post_title) }}">
-            <div class="text-danger error-message"></div>
+            @if ($errors->has('post_title'))
+        <ul class="text-danger">
+          @foreach ($errors->get('post_title') as $message)
+        <li>{{ $message }}</li>
+      @endforeach
+        </ul>
+      @endif
           </div>
 
           <div class="modal-inner-body w-50 m-auto pt-3 pb-3">
             <textarea placeholder="投稿内容" name="post_body" class="w-100">{{ old('post_body', $post->post) }}</textarea>
-            <div class="text-danger error-message"></div>
+            @if ($errors->has('post_body'))
+        <ul class="text-danger">
+          @foreach ($errors->get('post_body') as $message)
+        <li>{{ $message }}</li>
+      @endforeach
+        </ul>
+      @endif
           </div>
 
           <div class="w-50 m-auto edit-modal-btn d-flex">
@@ -86,8 +102,7 @@
     </div>
   </div>
 
-
-
+  <!-- 削除モーダル -->
   <div class="modal js-delete-modal">
     <div class="modal__bg js-modal-close"></div>
     <div class="modal__content">
@@ -107,6 +122,4 @@
       </form>
     </div>
   </div>
-
-
 </x-sidebar>
