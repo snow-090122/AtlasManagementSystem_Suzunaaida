@@ -33,7 +33,7 @@ class PostFormRequest extends FormRequest
                 'required',
                 'string',
                 'max:100',
-                Rule::unique('main_categories', 'name')
+                Rule::unique('main_categories', 'id')
             ],
 
             // メインカテゴリー ID のバリデーション
@@ -47,7 +47,7 @@ class PostFormRequest extends FormRequest
                 'required',
                 'string',
                 'max:100',
-                Rule::unique('sub_categories', 'name')
+                Rule::unique('sub_categories', 'id')
             ],
         ];
     }

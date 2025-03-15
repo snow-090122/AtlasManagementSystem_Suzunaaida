@@ -63,16 +63,17 @@
           </div>
 
           <div class="mt-3">
-            <input type="radio" name="sex" class="sex" value="1">
-            <label style="font-size:13px">男性</label>
-            <input type="radio" name="sex" class="sex" value="2">
-            <label style="font-size:13px">女性</label>
-            <input type="radio" name="sex" class="sex" value="3">
-            <label style="font-size:13px">その他</label>
+            <label class="d-block m-0" style="font-size:13px">性別</label>
+            <div>
+              <input type="radio" name="sex" class="sex" value="1" {{ old('sex') == 1 ? 'checked' : '' }}> 男性
+              <input type="radio" name="sex" class="sex" value="2" {{ old('sex') == 2 ? 'checked' : '' }}> 女性
+              <input type="radio" name="sex" class="sex" value="3" {{ old('sex') == 3 ? 'checked' : '' }}> その他
+            </div>
             @error('sex')
         <div class="text-danger">{{ $message }}</div>
       @enderror
           </div>
+
 
 
           <div class="mt-3">
@@ -159,71 +160,61 @@
             </select>
             <label style="font-size:13px">日</label>
             {{-- 生年月日のエラーメッセージ --}}
-            @error('old_year')
-        <div class="text-danger">{{ $message }}</div>
-      @enderror
-            @error('old_month')
-        <div class="text-danger">{{ $message }}</div>
-      @enderror
-            @error('old_day')
-        <div class="text-danger">{{ $message }}</div>
-      @enderror
-          </div>
+            @if ($errors->has('birth_date'))
+        <div class="text-danger">{{ $errors->first('birth_date') }}</div>
+      @endif
+            <div class="mt-3">
+              <label class="d-block m-0" style="font-size:13px">役職</label>
+              <div>
+                <input type="radio" name="role" class="role" value="1" {{ old('role') == 1 ? 'checked' : '' }}> 教師(国語)
+                <input type="radio" name="role" class="role" value="2" {{ old('role') == 2 ? 'checked' : '' }}> 教師(数学)
+                <input type="radio" name="role" class="role" value="3" {{ old('role') == 3 ? 'checked' : '' }}> 教師(英語)
+                <input type="radio" name="role" class="role" value="4" {{ old('role') == 4 ? 'checked' : '' }}> 生徒
+              </div>
+              @error('role')
+          <div class="text-danger">{{ $message }}</div>
+        @enderror
+            </div>
 
-          <div class="mt-3">
-            <label class="d-block m-0" style="font-size:13px">役職</label>
-            <input type="radio" name="role" class="admin_role role" value="1">
-            <label style="font-size:13px">教師(国語)</label>
-            <input type="radio" name="role" class="admin_role role" value="2">
-            <label style="font-size:13px">教師(数学)</label>
-            <input type="radio" name="role" class="admin_role role" value="3">
-            <label style="font-size:13px">教師(英語)</label>
-            <input type="radio" name="role" class="other_role role" value="4">
-            <label style="font-size:13px" class="other_role">生徒</label>
-            @error('role')
-        <div class="text-danger">{{ $message }}</div>
-      @enderror
-          </div>
-
-          <div class="select_teacher d-none">
-            <label class="d-block m-0" style="font-size:13px">選択科目</label>
-            @foreach($subjects as $subject)
-        <div class="">
+            <div class="select_teacher d-none">
+              <label class="d-block m-0" style="font-size:13px">選択科目</label>
+              @foreach($subjects as $subject)
+          <div class="">
           <input type="checkbox" name="subject[]" value="{{ $subject->id }}">
           <label>{{ $subject->subject }}</label>
-        </div>
-      @endforeach
           </div>
-
-          <div class="mt-3">
-            <label class="d-block m-0" style="font-size:13px">パスワード</label>
-            <div class="border-bottom border-primary">
-              <input type="password" class="border-0 w-100 password" name="password">
+        @endforeach
             </div>
-            @error('password')
-        <div class="text-danger">{{ $message }}</div>
-      @enderror
-          </div>
 
-          <div class="mt-3">
-            <label class="d-block m-0" style="font-size:13px">確認用パスワード</label>
-            <div class="border-bottom border-primary">
-              <input type="password" class="border-0 w-100 password_confirmation" name="password_confirmation">
+            <div class="mt-3">
+              <label class="d-block m-0" style="font-size:13px">パスワード</label>
+              <div class="border-bottom border-primary">
+                <input type="password" class="border-0 w-100 password" name="password">
+              </div>
+              @error('password')
+          <div class="text-danger">{{ $message }}</div>
+        @enderror
             </div>
-            @error('password_confirmation')
-        <div class="text-danger">{{ $message }}</div>
-      @enderror
-          </div>
 
-          <div class="mt-5 text-right">
-            <input type="submit" class="btn btn-primary register_btn" disabled value="新規登録" onclick="return confirm('登録してよろしいですか？')">
+            <div class="mt-3">
+              <label class="d-block m-0" style="font-size:13px">確認用パスワード</label>
+              <div class="border-bottom border-primary">
+                <input type="password" class="border-0 w-100 password_confirmation" name="password_confirmation">
+              </div>
+              @error('password_confirmation')
+          <div class="text-danger">{{ $message }}</div>
+        @enderror
+            </div>
+
+            <div class="mt-5 text-right">
+              <input type="submit" class="btn btn-primary register_btn" disabled value="新規登録" onclick="return confirm('登録してよろしいですか？')">
+            </div>
+            <div class="text-center">
+              <a href="{{ route('login') }}">ログイン</a>
+            </div>
           </div>
-          <div class="text-center">
-            <a href="{{ route('login') }}">ログイン</a>
-          </div>
+          {{ csrf_field() }}
         </div>
-        {{ csrf_field() }}
-      </div>
   </form>
   </div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
