@@ -10,18 +10,19 @@ use App\Models\Posts\Post;
 
 class SubCategory extends Model
 {
-    const UPDATED_AT = null;
-    const CREATED_AT = null;
+    public $timestamps = false;
+
     protected $fillable = [
         'main_category_id',
-        'sub_category',
+        'sub_category_name',
     ];
-    public function mainCategory()
+
+    public function mainCategory(): BelongsTo
     {
         return $this->belongsTo(MainCategory::class, 'main_category_id');
     }
 
-    public function posts()
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'post_category_id');
     }

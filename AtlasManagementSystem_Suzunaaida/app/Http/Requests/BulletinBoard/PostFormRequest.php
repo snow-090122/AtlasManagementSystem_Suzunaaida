@@ -33,7 +33,7 @@ class PostFormRequest extends FormRequest
                 'required',
                 'string',
                 'max:100',
-                Rule::unique('main_categories', 'id')
+                Rule::unique('main_categories', 'name')
             ],
 
             // メインカテゴリー ID のバリデーション
@@ -42,13 +42,6 @@ class PostFormRequest extends FormRequest
                 Rule::exists('main_categories', 'id')
             ],
 
-            // サブカテゴリーのバリデーション
-            'sub_category_name' => [
-                'required',
-                'string',
-                'max:100',
-                Rule::unique('sub_categories', 'id')
-            ],
         ];
     }
 
@@ -70,9 +63,6 @@ class PostFormRequest extends FormRequest
             'main_category_name.unique' => 'このメインカテゴリー名はすでに登録されています。',
 
             'main_category_id.exists' => '選択されたメインカテゴリーが無効です。',
-
-            'sub_category_name.required' => 'サブカテゴリーを必ず入力してください。',
-            'sub_category_name.unique' => 'このサブカテゴリー名はすでに登録されています。',
         ];
     }
 }

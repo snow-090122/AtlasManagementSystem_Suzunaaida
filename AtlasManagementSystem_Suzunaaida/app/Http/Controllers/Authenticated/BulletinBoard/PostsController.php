@@ -14,7 +14,7 @@ use App\Models\Users\User;
 use App\Http\Requests\BulletinBoard\PostFormRequest;
 use Auth;
 use App\Http\Requests\BulletinBoard\CommentRequest;
-
+use App\Http\Requests\BulletinBoard\SubCategoryRequest;
 
 
 class PostsController extends Controller
@@ -75,12 +75,12 @@ class PostsController extends Controller
         $post = Post::with('user', 'postComments')->findOrFail($post_id);
         return view('authenticated.bulletinboard.post_detail', compact('post'));
     }
-
     public function postInput()
     {
-        $main_categories = MainCategory::all();
+        $main_categories = MainCategory::with('subCategories')->get();
         return view('authenticated.bulletinboard.post_create', compact('main_categories'));
     }
+
 
     public function postCreate(PostFormRequest $request)
     {
@@ -88,7 +88,8 @@ class PostsController extends Controller
         Post::create([
             'user_id' => $user->id,
             'post_title' => $request->post_title,
-            'post' => $request->post_body
+            'post' => $request->post_body,
+            'sub_category_id' => $request->sub_category_id,
         ]);
         return redirect()->route('post.show');
     }
@@ -140,7 +141,25 @@ class PostsController extends Controller
         }
     }
 
+    public function subCategoryCreate(SubCategoryRequest $request)
+    {
+        try {
+            if (
+                SubCategory::where('sub_category', $request->sub_category)->where('main_category_id', $request->main_category_id)->exists()
+            ) {
+                return redirect()->back()->withErrors('このサブカテゴリーはすでに登録されています。');
+            }
+            SubCategory::create([
+                'sub_category' => $request->sub_category,
+                'main_category_id' => $request->main_category_id
+            ]);
 
+            return redirect()->route('post.input')->with('success', 'サブカテゴリーを追加しました！');
+        } catch (QueryException $e) {
+            return redirect()->back()->withErrors('サブカテゴリーの追加中にエラーが発生しました。');
+        }
+
+    }
 
 
     public function myBulletinBoard()
@@ -208,28 +227,6 @@ class PostsController extends Controller
             'success' => true,
             'like_count' => max(0, Like::where('like_post_id', $post_id)->count())
         ]);
-    }
-    public function subCategoryCreate(PostFormRequest $request)
-    {
-        try {
-            if (
-                SubCategory::where('sub_category', $request->sub_category_name)
-                    ->where('main_category_id', $request->main_category_id)
-                    ->exists()
-            ) {
-                return redirect()->back()->withErrors('このサブカテゴリーはすでに登録されています。');
-            }
-
-            SubCategory::create([
-                'sub_category' => $request->sub_category_name,
-                'main_category_id' => $request->main_category_id
-            ]);
-
-            return redirect()->route('post.input')->with('success', 'サブカテゴリーを追加しました！');
-
-        } catch (QueryException $e) {
-            return redirect()->back()->withErrors('このサブカテゴリーはすでに登録されています。');
-        }
     }
 
     public function commentCreate(CommentRequest $request)

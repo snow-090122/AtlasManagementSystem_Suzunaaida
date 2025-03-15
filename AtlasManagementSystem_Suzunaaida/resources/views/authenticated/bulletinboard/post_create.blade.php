@@ -10,10 +10,12 @@
           <select class="w-100" name="post_category_id">
             @if(isset($main_categories) && $main_categories->isNotEmpty())
         @foreach($main_categories as $main_category)
+
+      <option value="main_{{ $main_category->id }}">{{ $main_category->main_category }}</option>
       <optgroup label="{{ $main_category->main_category }}">
         @if($main_category->subCategories->isNotEmpty())
       @foreach($main_category->subCategories as $sub_category)
-      <option value="{{ $sub_category->id }}">{{ $sub_category->name }}</option>
+      <option value="{{ $sub_category->id }}">{{ $sub_category->sub_category }}</option>
     @endforeach
     @else
     <option value="" disabled>サブカテゴリーなし</option>
@@ -66,20 +68,13 @@
       <form action="{{ route('sub.category.create') }}" method="post">
         @csrf
         @error('sub_category_name')
-    <span class="error_message">{{ $message }}</span> @enderror
+      <span class="error_message">{{ $message }}</span>
+    @enderror
         <p class="m-0">サブカテゴリー</p>
-        <select class="w-100" name="post_category_id">
+        <select class="w-100" name="main_category_id">
         @if(isset($main_categories) && $main_categories->isNotEmpty())
       @foreach($main_categories as $main_category)
-      <optgroup label="{{ $main_category->main_category }}">
-      @if(isset($main_category->subCategories) && $main_category->subCategories->isNotEmpty())
-      @foreach($main_category->subCategories as $sub_category)
-      <option value="{{ $sub_category->id }}" {{ old('post_category_id') == $sub_category->id ? 'selected' : '' }}>
-      {{ $sub_category->name }}
-      </option>
-    @endforeach
-    @endif
-      </optgroup>
+      <option value="{{ $main_category->id }}">{{ $main_category->main_category }}</option>
     @endforeach
     @else
     <option value="" disabled>カテゴリーがありません</option>
@@ -88,6 +83,7 @@
         <input type="text" class="w-100" name="sub_category_name">
         <input type="submit" value="追加" class="w-100 btn btn-primary p-0">
       </form>
+
       </div>
     </div>
   @endcan
