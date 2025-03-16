@@ -14,10 +14,10 @@ class CreatePostSubCategoriesTable extends Migration
     public function up()
     {
         Schema::create('post_sub_categories', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedBigInteger('post_id')->index()->comment('投稿のid');
-            $table->integer('sub_category_id')->unsigned()->index()->comment('サブカテゴリーid');
-            $table->timestamp('created_at')->nullable()->comment('登録日時');
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('post_id')->index()->comment('投稿のID');
+            $table->unsignedBigInteger('sub_category_id')->index()->comment('サブカテゴリーID');
+            $table->timestamps(); // created_at, updated_at の追加
 
             // 外部キー制約の追加
             $table->foreign('post_id')->references('id')->on('posts')->onDelete('cascade');

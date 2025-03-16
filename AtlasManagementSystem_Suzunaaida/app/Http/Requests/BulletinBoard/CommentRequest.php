@@ -11,7 +11,7 @@ class CommentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // ここをtrueにすることで、誰でもこのリクエストを利用可能にする
+        return true;
     }
 
     /**

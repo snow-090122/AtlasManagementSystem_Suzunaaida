@@ -25,23 +25,21 @@ class PostFormRequest extends FormRequest
     public function rules()
     {
         return [
-            'post_title' => 'required|string|max:100',
-            'post_body' => 'required|string|max:2000',
-
-            // メインカテゴリーのバリデーション
-            'main_category_name' => [
-                'required',
-                'string',
-                'max:100',
-                Rule::unique('main_categories', 'name')
-            ],
-
-            // メインカテゴリー ID のバリデーション
-            'main_category_id' => [
+            // メインカテゴリーが必須かつ `main_categories` テーブルに存在することを確認
+            'post_category_id' => [
                 'required',
                 Rule::exists('main_categories', 'id')
             ],
 
+            // サブカテゴリー（選択された場合は `sub_categories` に存在する必要あり）
+            'sub_category_id' => [
+                'nullable', // 選択しなくてもよい
+                Rule::exists('sub_categories', 'id')
+            ],
+
+            // 投稿のタイトルと本文のバリデーション
+            'post_title' => 'required|string|max:100',
+            'post_body' => 'required|string|max:2000',
         ];
     }
 
@@ -51,6 +49,11 @@ class PostFormRequest extends FormRequest
     public function messages()
     {
         return [
+            'post_category_id.required' => 'カテゴリーを選択してください。',
+            'post_category_id.exists' => '選択されたカテゴリーが無効です。',
+
+            'sub_category_id.exists' => '選択されたサブカテゴリーが無効です。',
+
             'post_title.required' => 'タイトルは必ず入力してください。',
             'post_title.string' => 'タイトルは文字列で入力してください。',
             'post_title.max' => 'タイトルは100文字以内で入力してください。',
@@ -58,11 +61,6 @@ class PostFormRequest extends FormRequest
             'post_body.required' => '本文は必ず入力してください。',
             'post_body.string' => '本文は文字列で入力してください。',
             'post_body.max' => '本文は2000文字以内で入力してください。',
-
-            'main_category_name.required' => 'メインカテゴリーを必ず入力してください。',
-            'main_category_name.unique' => 'このメインカテゴリー名はすでに登録されています。',
-
-            'main_category_id.exists' => '選択されたメインカテゴリーが無効です。',
         ];
     }
 }

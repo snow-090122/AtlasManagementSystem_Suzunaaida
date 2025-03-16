@@ -7,25 +7,21 @@
 
         <div class="">
           <p class="mb-0">カテゴリー</p>
-          <select class="w-100" name="post_category_id">
-            @if(isset($main_categories) && $main_categories->isNotEmpty())
-        @foreach($main_categories as $main_category)
-
-      <option value="main_{{ $main_category->id }}">{{ $main_category->main_category }}</option>
-      <optgroup label="{{ $main_category->main_category }}">
-        @if($main_category->subCategories->isNotEmpty())
-      @foreach($main_category->subCategories as $sub_category)
-      <option value="{{ $sub_category->id }}">{{ $sub_category->sub_category }}</option>
-    @endforeach
-    @else
-    <option value="" disabled>サブカテゴリーなし</option>
-  @endif
-      </optgroup>
-    @endforeach
-      @else
-    <option value="" disabled>カテゴリーがありません</option>
-  @endif
+          <select class="w-100" name="sub_category_id">
+            <option value="">選択してください</option>
+            @foreach ($main_categories as $main_category)
+        <optgroup label="{{ $main_category->main_category }}">
+          @foreach ($main_category->subCategories as $sub_category)
+        <option value="{{ $sub_category->id }}" {{ old('sub_category_id') == $sub_category->id ? 'selected' : '' }}>
+        {{ $sub_category->sub_category }}
+        </option>
+      @endforeach
+        </optgroup>
+      @endforeach
           </select>
+          @error('sub_category_id')
+        <span class="error_message">{{ $message }}</span>
+      @enderror
         </div>
 
         <div class="mt-3">
@@ -33,7 +29,7 @@
         <span class="error_message">{{ $message }}</span>
       @enderror
           <p class="mb-0">タイトル</p>
-          <input type="text" class="w-100" name="post_title" value="{{ old('post_title') }}">
+          <input type="text" class="w-100" name="post_title" value="{{ old('post_title') }}" required>
         </div>
 
         <div class="mt-3">
@@ -41,7 +37,7 @@
         <span class="error_message">{{ $message }}</span>
       @enderror
           <p class="mb-0">投稿内容</p>
-          <textarea class="w-100" name="post_body">{{ old('post_body') }}</textarea>
+          <textarea class="w-100" name="post_body" required>{{ old('post_body') }}</textarea>
         </div>
 
         <div class="mt-3 text-right">
@@ -67,7 +63,7 @@
       <!-- サブカテゴリー追加 -->
       <form action="{{ route('sub.category.create') }}" method="post">
         @csrf
-        @error('sub_category_name')
+        @error('sub_category')
       <span class="error_message">{{ $message }}</span>
     @enderror
         <p class="m-0">サブカテゴリー</p>
@@ -80,8 +76,13 @@
     <option value="" disabled>カテゴリーがありません</option>
   @endif
         </select>
-        <input type="text" class="w-100" name="sub_category_name">
-        <input type="submit" value="追加" class="w-100 btn btn-primary p-0">
+        <input type="text" class="w-100" name="sub_category" placeholder="サブカテゴリー名">
+
+        @if($main_categories->isNotEmpty())
+      <input type="submit" value="追加" class="w-100 btn btn-primary p-0">
+    @else
+    <p class="text-danger">メインカテゴリーを先に追加してください。</p>
+  @endif
       </form>
 
       </div>

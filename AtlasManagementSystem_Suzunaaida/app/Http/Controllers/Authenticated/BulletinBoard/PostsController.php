@@ -14,7 +14,7 @@ use App\Models\Users\User;
 use App\Http\Requests\BulletinBoard\PostFormRequest;
 use Auth;
 use App\Http\Requests\BulletinBoard\CommentRequest;
-use App\Http\Requests\BulletinBoard\SubCategoryRequest;
+
 
 
 class PostsController extends Controller
@@ -40,9 +40,10 @@ class PostsController extends Controller
         }
 
         if ($request->like_posts) {
-            $likes = Auth::user()->likePostId();
+            $likes = Auth::user()->likes()->pluck('like_post_id')->toArray();
             $posts->whereIn('id', $likes);
         }
+
 
         if ($request->my_posts) {
             $posts->where('user_id', Auth::id());
@@ -84,14 +85,20 @@ class PostsController extends Controller
 
     public function postCreate(PostFormRequest $request)
     {
+        // 送信されたデータを確認
+        dd($request->all());
+
         $user = Auth::user();
-        Post::create([
+
+        // 投稿を作成
+        $post = Post::create([
             'user_id' => $user->id,
+            'sub_category_id' => $request->sub_category_id,
             'post_title' => $request->post_title,
             'post' => $request->post_body,
-            'sub_category_id' => $request->sub_category_id,
         ]);
-        return redirect()->route('post.show');
+
+        return redirect()->route('post.show')->with('success', '投稿が作成されました！');
     }
 
     public function postEdit(PostFormRequest $request)
@@ -127,9 +134,13 @@ class PostsController extends Controller
             return redirect()->route('post.show')->withErrors('他のユーザーの投稿は削除できません。');
         }
 
+        // サブカテゴリーの関連を削除
+        \DB::table('post_sub_categories')->where('post_id', $post->id)->delete();
+
         $post->delete();
-        return redirect()->route('post.show');
+        return redirect()->route('post.show')->with('success', '投稿が削除されました！');
     }
+
 
     public function mainCategoryCreate(Request $request)
     {
@@ -141,24 +152,34 @@ class PostsController extends Controller
         }
     }
 
-    public function subCategoryCreate(SubCategoryRequest $request)
+    public function subCategoryCreate(Request $request)
     {
+        //     // デバッグ：リクエストデータの確認
+        //     dd($request->all());
+
+        // サブカテゴリー専用のバリデーション
+        $request->validate([
+            'main_category_id' => 'required|exists:main_categories,id',
+            'sub_category' => 'required|string|max:100|unique:sub_categories,sub_category',
+        ], [
+            'sub_category.required' => 'サブカテゴリーを必ず入力してください。',
+            'sub_category.string' => 'サブカテゴリー名は文字列で入力してください。',
+            'sub_category.max' => 'サブカテゴリー名は100文字以内で入力してください。',
+            'sub_category.unique' => 'このサブカテゴリー名はすでに登録されています。',
+            'main_category_id.required' => 'メインカテゴリーを選択してください。',
+            'main_category_id.exists' => '選択されたメインカテゴリーが無効です。',
+        ]);
+
         try {
-            if (
-                SubCategory::where('sub_category', $request->sub_category)->where('main_category_id', $request->main_category_id)->exists()
-            ) {
-                return redirect()->back()->withErrors('このサブカテゴリーはすでに登録されています。');
-            }
             SubCategory::create([
                 'sub_category' => $request->sub_category,
-                'main_category_id' => $request->main_category_id
+                'main_category_id' => $request->main_category_id,
             ]);
 
             return redirect()->route('post.input')->with('success', 'サブカテゴリーを追加しました！');
         } catch (QueryException $e) {
-            return redirect()->back()->withErrors('サブカテゴリーの追加中にエラーが発生しました。');
+            return redirect()->back()->withErrors('サブカテゴリーの追加中にエラーが発生しました: ' . $e->getMessage());
         }
-
     }
 
 
@@ -176,7 +197,7 @@ class PostsController extends Controller
             'post_id' => 'required|exists:posts,id'
         ]);
 
-        $user = Auth::user(); // ユーザー情報を取得
+        $user = Auth::user();
         $post_id = $request->post_id;
 
         if (!$user) {
@@ -186,16 +207,18 @@ class PostsController extends Controller
             ], 401);
         }
 
-        $existing_like = Like::where('like_user_id', $user->id)
-            ->where('like_post_id', $post_id)
-            ->exists();
+        \DB::transaction(function () use ($user, $post_id) {
+            $existing_like = Like::where('like_user_id', $user->id)
+                ->where('like_post_id', $post_id)
+                ->exists();
 
-        if (!$existing_like) {
-            Like::create([
-                'like_user_id' => $user->id,
-                'like_post_id' => $post_id,
-            ]);
-        }
+            if (!$existing_like) {
+                Like::create([
+                    'like_user_id' => $user->id,
+                    'like_post_id' => $post_id,
+                ]);
+            }
+        });
 
         return response()->json([
             'success' => true,

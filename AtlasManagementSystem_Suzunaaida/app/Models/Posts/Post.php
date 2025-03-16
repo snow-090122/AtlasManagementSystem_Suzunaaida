@@ -3,7 +3,10 @@
 namespace App\Models\Posts;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Posts\Like;
+use App\Models\Categories\SubCategory;
 
 class Post extends Model
 {
@@ -14,25 +17,27 @@ class Post extends Model
         'user_id',
         'post_title',
         'post',
+        'sub_category_id', // 追加
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo('App\Models\Users\User');
     }
 
-    public function postComments()
+    public function postComments(): HasMany
     {
         return $this->hasMany('App\Models\Posts\PostComment');
     }
 
-    public function subCategories()
+    //サブカテゴリーのリレーション
+    public function subCategory(): BelongsTo
     {
-        // リレーションの定義
+        return $this->belongsTo(SubCategory::class, 'sub_category_id');
     }
 
     // いいねのリレーションを定義
-    public function likes()
+    public function likes(): HasMany
     {
         return $this->hasMany(Like::class, 'like_post_id');
     }
