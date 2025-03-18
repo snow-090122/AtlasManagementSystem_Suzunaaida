@@ -5,9 +5,10 @@ namespace App\Models\Posts;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Posts\Like;
 use App\Models\Categories\SubCategory;
-
+use App\Models\Posts\PostComment;
 class Post extends Model
 {
     const UPDATED_AT = null;
@@ -17,7 +18,6 @@ class Post extends Model
         'user_id',
         'post_title',
         'post',
-        'sub_category_id', // 追加
     ];
 
     public function user(): BelongsTo
@@ -30,11 +30,12 @@ class Post extends Model
         return $this->hasMany('App\Models\Posts\PostComment');
     }
 
-    //サブカテゴリーのリレーション
-    public function subCategory(): BelongsTo
+    // サブカテゴリーのリレーション（多対多）
+    public function subCategories()
     {
-        return $this->belongsTo(SubCategory::class, 'sub_category_id');
+        return $this->belongsToMany(SubCategory::class, 'post_sub_categories', 'post_id', 'sub_category_id');
     }
+
 
     // いいねのリレーションを定義
     public function likes(): HasMany

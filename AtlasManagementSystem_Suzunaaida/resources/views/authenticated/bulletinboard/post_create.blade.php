@@ -1,11 +1,24 @@
 <x-sidebar>
   <div class="post_create_container d-flex">
     <div class="post_create_area border w-50 m-5 p-5">
+      <!-- @if ($errors->any())
+      <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+      <li>{{ $error }}</li>
+    @endforeach
+      </ul>
+      </div>
+    @endif -->
+
       <!-- 投稿フォーム -->
       <form action="{{ route('post.create') }}" method="post" id="postCreate">
         @csrf
 
         <div class="">
+          @error('sub_category_id')
+        <span class="text-danger">{{ $message }}</span>
+      @enderror
           <p class="mb-0">カテゴリー</p>
           <select class="w-100" name="sub_category_id">
             <option value="">選択してください</option>
@@ -19,9 +32,6 @@
         </optgroup>
       @endforeach
           </select>
-          @error('sub_category_id')
-        <span class="error_message">{{ $message }}</span>
-      @enderror
         </div>
 
         <div class="mt-3">

@@ -8,7 +8,7 @@
             <div>
               @if($post->user_id == Auth::user()->id)
           <span class="edit-modal-open" post_title="{{ $post->post_title }}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">編集</span>
-          <button type="button" class="delete-modal-open btn btn-danger" post_id="{{ $post->id }}">削除</button>
+          <button type="button" class="delete-modal-open btn btn-danger" data-post-id="{{ $post->id }}">削除</button>
         @endif
             </div>
           </div>
@@ -28,13 +28,13 @@
           <div class="comment_container">
             <span>コメント</span>
             @foreach($post->postComments as $comment)
-        <div class="comment_area border-top">
-          <p>
-            <span>{{ $comment->user->over_name }}</span>
-            <span>{{ $comment->user->under_name }}</span> さん
+          <div class="comment_area border-top">
+            <p>
+          <span>{{ $comment->user->over_name }}</span>
+          <span>{{ $comment->user->under_name }}</span> さん
           </p>
-          <p>{{ $comment->comment }}</p>
-        </div>
+            <p>{{ $comment->comment }}</p>
+          </div>
       @endforeach
           </div>
         </div>
@@ -67,18 +67,19 @@
   <div class="modal js-modal">
     <div class="modal__bg js-modal-close"></div>
     <div class="modal__content">
-      <form action="{{ route('post.edit') }}" method="post" class="edit-modal-form">
+      <form action="{{ route('post.update', ['id' => $post->id]) }}" method="post" class="edit-modal-form">
+        @csrf
+        @method('PUT')
         <div class="w-100">
           <div class="modal-inner-title w-50 m-auto">
             <input type="text" name="post_title" placeholder="タイトル" class="w-100" value="{{ old('post_title', $post->post_title) }}">
-            @if ($errors->has('post_title'))
+            @error('post_title')
         <ul class="text-danger">
-          @foreach ($errors->get('post_title') as $message)
-        <li>{{ $message }}</li>
-      @endforeach
+          <li>{{ $message }}</li>
         </ul>
-      @endif
+      @enderror
           </div>
+
 
           <div class="modal-inner-body w-50 m-auto pt-3 pb-3">
             <textarea placeholder="投稿内容" name="post_body" class="w-100">{{ old('post_body', $post->post) }}</textarea>

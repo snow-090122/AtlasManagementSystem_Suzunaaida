@@ -8,10 +8,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
-
 use App\Models\Posts\Like;
 use App\Models\Subjects\Subject;
-
 
 class User extends Authenticatable
 {
@@ -62,21 +60,22 @@ class User extends Authenticatable
         return $this->hasMany(Subject::class, 'user_id');
     }
 
+    // ✅ いいねリレーションを定義
     public function likes()
     {
         return $this->hasMany(Like::class, 'like_user_id');
     }
 
-    // いいねしているかどうかを判定
+    // ✅ いいねしているかどうかを判定
     public function is_Like($post_id)
     {
-        return $this->likes()->where('like_post_id', $post_id)->exists();
+        return $this->likes()->where('like_post_id', $post_id)->exists(); // ✅ `exists()` を使って boolean を返す
     }
 
-    //いいねした投稿の ID リストを取得
+    // ✅ いいねした投稿の ID リストを取得
     public function likePostId()
     {
-        return $this->likes()->pluck('like_post_id')->toArray();
+        return $this->likes()->pluck('like_post_id')->toArray(); // ✅ 配列で返す
     }
 
     public function getAuthIdentifierName()

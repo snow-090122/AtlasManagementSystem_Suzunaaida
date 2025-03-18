@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use DB;
 use App\Http\Requests\Auth\RegisterRequest;
-
-
 use App\Models\Subjects\Subject;
 use App\Models\Users\User;
 
