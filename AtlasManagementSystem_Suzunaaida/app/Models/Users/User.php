@@ -57,8 +57,9 @@ class User extends Authenticatable
     // subjects とのリレーションを定義
     public function subjects()
     {
-        return $this->hasMany(Subject::class, 'user_id');
+        return $this->belongsToMany(Subject::class, 'user_subjects', 'user_id', 'subject_id');
     }
+
 
     // ✅ いいねリレーションを定義
     public function likes()

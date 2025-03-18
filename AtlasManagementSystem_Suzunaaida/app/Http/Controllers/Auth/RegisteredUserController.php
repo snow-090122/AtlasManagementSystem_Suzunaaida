@@ -38,14 +38,12 @@ class RegisteredUserController extends Controller
      */
     public function store(RegisterRequest $request)
     {
+        // dd($request->all()); // 🔍 フォームの送信データを確認
+
         DB::beginTransaction();
         try {
-            $old_year = $request->old_year;
-            $old_month = $request->old_month;
-            $old_day = $request->old_day;
-            $data = $old_year . '-' . $old_month . '-' . $old_day;
-            $birth_day = date('Y-m-d', strtotime($data));
-            $subjects = $request->subject;
+            $birth_day = $request->birth_date;
+            // dd($birth_day); // 🔍 `YYYY-MM-DD` 形式で正しく取得されているか確認
 
             $user_get = User::create([
                 'over_name' => $request->over_name,
@@ -58,6 +56,7 @@ class RegisteredUserController extends Controller
                 'role' => $request->role,
                 'password' => bcrypt($request->password)
             ]);
+
             if ($request->role == 4 && !empty($request->subject)) {
                 $user_get->subjects()->attach($request->subject);
             }
@@ -66,7 +65,8 @@ class RegisteredUserController extends Controller
             return view('auth.login.login');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect()->route('login');
+            dd($e->getMessage());
         }
     }
+
 }
