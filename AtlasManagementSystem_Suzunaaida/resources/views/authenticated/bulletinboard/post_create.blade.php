@@ -1,23 +1,14 @@
 <x-sidebar>
   <div class="post_create_container d-flex">
     <div class="post_create_area border w-50 m-5 p-5">
-      <!-- @if ($errors->any())
-      <div class="alert alert-danger">
-      <ul>
-        @foreach ($errors->all() as $error)
-      <li>{{ $error }}</li>
-    @endforeach
-      </ul>
-      </div>
-    @endif -->
-
       <!-- 投稿フォーム -->
       <form action="{{ route('post.create') }}" method="post" id="postCreate">
         @csrf
 
+        <!-- カテゴリー -->
         <div class="">
           @error('sub_category_id')
-        <span class="text-danger">{{ $message }}</span>
+        <p class="text-danger">{{ $message }}</p>
       @enderror
           <p class="mb-0">カテゴリー</p>
           <select class="w-100" name="sub_category_id">
@@ -34,22 +25,25 @@
           </select>
         </div>
 
+        <!-- タイトル -->
         <div class="mt-3">
           @error('post_title')
-        <span class="error_message">{{ $message }}</span>
+        <p class="text-danger">{{ $message }}</p>
       @enderror
           <p class="mb-0">タイトル</p>
-          <input type="text" class="w-100" name="post_title" value="{{ old('post_title') }}" required>
+          <input type="text" class="w-100" name="post_title" value="{{ old('post_title') }}">
         </div>
 
+        <!-- 投稿内容 -->
         <div class="mt-3">
           @error('post_body')
-        <span class="error_message">{{ $message }}</span>
+        <p class="text-danger">{{ $message }}</p>
       @enderror
           <p class="mb-0">投稿内容</p>
-          <textarea class="w-100" name="post_body" required>{{ old('post_body') }}</textarea>
+          <textarea class="w-100" name="post_body">{{ old('post_body') }}</textarea>
         </div>
 
+        <!-- 送信ボタン -->
         <div class="mt-3 text-right">
           <input type="submit" class="btn btn-primary" value="投稿">
         </div>
@@ -63,7 +57,7 @@
       <form action="{{ route('main.category.create') }}" method="post">
         @csrf
         @error('main_category_name')
-      <span class="error_message">{{ $message }}</span>
+      <p class="text-danger">{{ $message }}</p>
     @enderror
         <p class="m-0">メインカテゴリー</p>
         <input type="text" class="w-100" name="main_category_name">
@@ -74,7 +68,7 @@
       <form action="{{ route('sub.category.create') }}" method="post">
         @csrf
         @error('sub_category')
-      <span class="error_message">{{ $message }}</span>
+      <p class="text-danger">{{ $message }}</p>
     @enderror
         <p class="m-0">サブカテゴリー</p>
         <select class="w-100" name="main_category_id">
@@ -94,7 +88,6 @@
     <p class="text-danger">メインカテゴリーを先に追加してください。</p>
   @endif
       </form>
-
       </div>
     </div>
   @endcan

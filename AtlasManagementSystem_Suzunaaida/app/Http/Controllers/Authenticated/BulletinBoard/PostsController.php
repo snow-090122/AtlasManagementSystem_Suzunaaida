@@ -138,6 +138,11 @@ class PostsController extends Controller
     {
         $request->validate([
             'main_category_name' => 'required|string|max:100|unique:main_categories,main_category'
+        ], [
+            'main_category_name.required' => 'メインカテゴリー名を入力してください。',
+            'main_category_name.string' => 'メインカテゴリー名は文字列である必要があります。',
+            'main_category_name.max' => 'メインカテゴリー名は100文字以内で入力してください。',
+            'main_category_name.unique' => 'このメインカテゴリー名はすでに存在しています。',
         ]);
 
         MainCategory::create(['main_category' => $request->main_category_name]);
@@ -150,6 +155,13 @@ class PostsController extends Controller
         $request->validate([
             'main_category_id' => 'required|exists:main_categories,id',
             'sub_category' => 'required|string|max:100|unique:sub_categories,sub_category'
+        ], [
+            'main_category_id.required' => 'メインカテゴリーを選択してください。',
+            'main_category_id.exists' => '選択されたメインカテゴリーは存在しません。',
+            'sub_category.required' => 'サブカテゴリー名を入力してください。',
+            'sub_category.string' => 'サブカテゴリー名は文字列である必要があります。',
+            'sub_category.max' => 'サブカテゴリー名は100文字以内で入力してください。',
+            'sub_category.unique' => 'このサブカテゴリー名はすでに存在しています。',
         ]);
 
         SubCategory::create([
