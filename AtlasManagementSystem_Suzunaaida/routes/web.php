@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
         });
         Route::namespace('BulletinBoard')->group(function () {
             Route::get('bulletin_board/posts/{keyword?}', [PostsController::class, 'show'])->name('post.show');
+            Route::get('/bulletin_board/posts', [PostsController::class, 'index'])->name('post.index');
             Route::get('bulletin_board/input', [PostsController::class, 'postInput'])->name('post.input');
             Route::get('bulletin_board/like', [PostsController::class, 'likeBulletinBoard'])->name('like.bulletin.board');
             Route::get('bulletin_board/my_post', [PostsController::class, 'myBulletinBoard'])->name('my.bulletin.board');
@@ -58,6 +59,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('like/post/{id}', [PostsController::class, 'postLike'])->name('post.like');
             Route::delete('unlike/post/{id}', [PostsController::class, 'postUnLike'])->name('post.unlike');
         });
+
 
         Route::namespace('Users')->group(function () {
             Route::get('show/users', [UsersController::class, 'showUsers'])->name('user.show');

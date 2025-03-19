@@ -8,7 +8,10 @@
             <div>
               @if($post->user_id == Auth::user()->id)
           <span class="edit-modal-open" post_title="{{ $post->post_title }}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">編集</span>
-          <button type="button" class="delete-modal-open btn btn-danger" data-post-id="{{ $post->id }}">削除</button>
+          <button class="js-delete-btn btn btn-danger" data-post-id="{{ $post->id }}">
+          削除
+          </button>
+
         @endif
             </div>
           </div>
@@ -107,7 +110,9 @@
   <div class="modal js-delete-modal">
     <div class="modal__bg js-modal-close"></div>
     <div class="modal__content">
-      <form action="" method="post" class="delete-form">
+      <form id="delete-form" action="" method="POST" class="delete-form">
+        {{ csrf_field() }}
+        {{ method_field('DELETE') }}
         <div class="w-100">
           <div class="modal-inner-title w-50 m-auto text-center">
             <p>本当にこの投稿を削除しますか？</p>
@@ -118,9 +123,8 @@
             <input type="submit" class="btn btn-danger" value="削除">
           </div>
         </div>
-        {{ csrf_field() }}
-        {{ method_field('DELETE') }}
       </form>
     </div>
   </div>
+
 </x-sidebar>

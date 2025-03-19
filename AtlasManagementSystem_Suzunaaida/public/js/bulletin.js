@@ -46,44 +46,51 @@ $(function () {
     });
   });
 
+  $(function () {
+    $(".js-delete-btn").on("click", function () {
+      let postId = $(this).data("post-id");
+      let deleteUrl = "/bulletin_board/delete/" + postId;
 
-  $(document).ready(function () {
-    $(".edit-modal-btn input[type='submit']").on('click', function (e) {
-      e.preventDefault(); // 通常の送信を防ぐ
+      $(".delete-form").attr("action", deleteUrl);
+      $(".delete-modal-hidden").val(postId);
 
-      let form = $(this).closest("form");
-      let formData = new FormData(form[0]);
-      let actionUrl = form.attr("action");
+      console.log("削除リクエストURL:", deleteUrl);
+      $(".js-delete-modal").fadeIn();
+    });
+
+    $(".delete-form").on("submit", function (e) {
+      e.preventDefault(); // デフォルトのフォーム送信を防ぐ
+
+      let form = $(this);
+      let url = form.attr("action");
+      let postId = $(".delete-modal-hidden").val(); // 削除する投稿のID
 
       $.ajax({
-        url: actionUrl,
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
+        type: "DELETE", // `DELETE` を正しく指定
+        url: url,
+        data: form.serialize(),
         success: function (response) {
-          if (response.success) {
-            $(".detsail_post_title").text(response.updated_title);
-            $(".detsail_post").text(response.updated_body);
-            $(".js-modal").fadeOut();
-            $('.error-message').remove(); // エラー表示をクリア
-          }
+          console.log("削除成功:", response);
+
+          // 投稿を即座に非表示にする
+          $("#post-" + postId).fadeOut(300, function () {
+            $(this).remove();
+          });
+
+          // 500ms 後に一覧ページへ遷移（キャッシュを防ぐためのクエリを追加）
+          setTimeout(function () {
+            window.location.replace(response.redirect + "?t=" + new Date().getTime());
+          }, 500);
         },
         error: function (xhr) {
-          let errors = xhr.responseJSON.errors;
-          $(".error-message").remove(); // 既存のエラーメッセージ削除
-          if (errors) {
-            $.each(errors, function (key, messages) {
-              let errorHtml = '<ul class="text-danger error-message">';
-              $.each(messages, function (index, message) {
-                errorHtml += `<li>${message}</li>`;
-              });
-              errorHtml += '</ul>';
-              $(`[name="${key}"]`).after(errorHtml);
-            });
-          }
+          console.error("削除エラー:", xhr.responseText);
         }
       });
     });
+
+    $(".js-modal-close").on("click", function () {
+      $(".js-delete-modal").fadeOut();
+    });
   });
+
 });

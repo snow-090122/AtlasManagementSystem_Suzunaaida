@@ -105,9 +105,33 @@ class PostsController extends Controller
 
     public function postDelete($id)
     {
-        Post::findOrFail($id)->delete();
-        return redirect()->route('post.show');
+        $post = Post::find($id);
+
+        if (!$post) {
+            return response()->json([
+                'message' => '投稿が見つかりません',
+                'redirect' => route('post.index')
+            ], 404);
+        }
+
+        $post->delete();
+
+        return response()->json([
+            'message' => '削除成功',
+            'redirect' => route('post.index') // 一覧ページへ
+        ], 200);
     }
+
+
+    public function index()
+    {
+        return response()->view('authenticated.bulletinboard.posts', [
+            'posts' => Post::latest()->get()
+        ])->header("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0")
+            ->header("Pragma", "no-cache")
+            ->header("Expires", "Fri, 01 Jan 1990 00:00:00 GMT");
+    }
+
 
 
     public function mainCategoryCreate(Request $request)
