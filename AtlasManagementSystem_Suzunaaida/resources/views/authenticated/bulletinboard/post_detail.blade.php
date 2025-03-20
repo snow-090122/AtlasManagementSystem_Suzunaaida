@@ -11,7 +11,6 @@
           <button class="js-delete-btn btn btn-danger" data-post-id="{{ $post->id }}">
           削除
           </button>
-
         @endif
             </div>
           </div>
@@ -66,44 +65,50 @@
     </div>
   </div>
 
+  <!-- CSRFトークンをmetaタグに含める -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <!-- 編集モーダル -->
   <div class="modal js-modal">
     <div class="modal__bg js-modal-close"></div>
     <div class="modal__content">
-      <form action="{{ route('post.update', ['id' => $post->id]) }}" method="post" class="edit-modal-form">
+      <form id="edit-post-form">
         @csrf
-        @method('PUT')
-        <div class="w-100">
-          <div class="modal-inner-title w-50 m-auto">
-            <input type="text" name="post_title" placeholder="タイトル" class="w-100" value="{{ old('post_title', $post->post_title) }}">
-            @error('post_title')
-        <ul class="text-danger">
-          <li>{{ $message }}</li>
-        </ul>
-      @enderror
-          </div>
+        <input type="hidden" name="_method" value="PUT">
+        <input type="hidden" name="post_id" id="edit-post-id">
 
-
-          <div class="modal-inner-body w-50 m-auto pt-3 pb-3">
-            <textarea placeholder="投稿内容" name="post_body" class="w-100">{{ old('post_body', $post->post) }}</textarea>
-            @if ($errors->has('post_body'))
-        <ul class="text-danger">
-          @foreach ($errors->get('post_body') as $message)
-        <li>{{ $message }}</li>
-      @endforeach
-        </ul>
-      @endif
-          </div>
-
-          <div class="w-50 m-auto edit-modal-btn d-flex">
-            <a class="js-modal-close btn btn-danger d-inline-block" href="">閉じる</a>
-            <input type="hidden" class="edit-modal-hidden" name="post_id" value="{{ $post->id }}">
-            <input type="submit" class="btn btn-primary d-block" value="編集">
-          </div>
+        <!-- タイトル入力 -->
+        <div class="modal-inner-title w-50 m-auto">
+          <input type="text" name="post_title" id="edit-post-title" placeholder="タイトル" class="w-100">
+          <ul class="text-danger" id="error-post-title"></ul>
         </div>
-        {{ csrf_field() }}
+
+        <!-- 投稿内容入力 -->
+        <div class="modal-inner-body w-50 m-auto">
+          <textarea name="post_body" id="edit-post-body" placeholder="投稿内容" class="w-100"></textarea>
+          <ul class="text-danger" id="error-post-body"></ul>
+        </div>
+
+        <!-- ボタン -->
+        <div class="modal-buttons">
+          <button type="button" class="js-modal-close btn btn-secondary">閉じる</button>
+          <button type="submit" class="btn btn-primary">編集</button>
+        </div>
       </form>
     </div>
+  </div>
+
+
+
+  <div class="w-50 m-auto edit-modal-btn d-flex">
+    <a class="js-modal-close btn btn-danger d-inline-block" href="">閉じる</a>
+    <input type="hidden" class="edit-modal-hidden" name="post_id" value="{{ $post->id }}">
+    <input type="submit" class="btn btn-primary d-block" value="編集">
+  </div>
+  </div>
+  {{ csrf_field() }}
+  </form>
+  </div>
   </div>
 
   <!-- 削除モーダル -->

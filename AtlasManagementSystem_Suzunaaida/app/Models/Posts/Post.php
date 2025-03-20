@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Posts\Like;
 use App\Models\Categories\SubCategory;
+use App\Models\Users\User;
 use App\Models\Posts\PostComment;
 class Post extends Model
 {
@@ -22,7 +23,7 @@ class Post extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo('App\Models\Users\User');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function postComments(): HasMany

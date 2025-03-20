@@ -2,8 +2,14 @@
   <div class="post_create_container d-flex">
     <div class="post_create_area border w-50 m-5 p-5">
       <!-- 投稿フォーム -->
-      <form action="{{ route('post.create') }}" method="post" id="postCreate">
+      <form action="{{ route('post.create') }}" method="post" id="postCreate" onsubmit="checkForm(event)">
         @csrf
+        <script>
+          function checkForm(event) {
+            let subCategoryId = document.querySelector('select[name="sub_category_id"]').value;
+            console.log("送信される sub_category_id:", subCategoryId);
+          }
+        </script>
 
         <!-- カテゴリー -->
         <div class="">
@@ -11,12 +17,12 @@
         <p class="text-danger">{{ $message }}</p>
       @enderror
           <p class="mb-0">カテゴリー</p>
-          <select class="w-100" name="sub_category_id">
+          <select class="w-100" name="sub_category_id" required>
             <option value="">選択してください</option>
             @foreach ($main_categories as $main_category)
         <optgroup label="{{ $main_category->main_category }}">
           @foreach ($main_category->subCategories as $sub_category)
-        <option value="{{ $sub_category->id }}" {{ old('sub_category_id') == $sub_category->id ? 'selected' : '' }}>
+        <option value="{{ intval($sub_category->id) }}" {{ old('sub_category_id') == $sub_category->id ? 'selected' : '' }}>
         {{ $sub_category->sub_category }}
         </option>
       @endforeach
@@ -24,6 +30,7 @@
       @endforeach
           </select>
         </div>
+
 
         <!-- タイトル -->
         <div class="mt-3">

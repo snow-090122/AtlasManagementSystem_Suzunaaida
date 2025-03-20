@@ -20,5 +20,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/bulletin_board/delete/*',
+        '/bulletin_board/update/*',
     ];
 }

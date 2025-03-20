@@ -24,12 +24,18 @@ class PostFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'sub_category_id' => 'required|exists:sub_categories,id',
+        $rules = [
             'post_title' => 'required|string|max:100',
             'post_body' => 'required|string|max:2000',
         ];
+
+        if ($this->isMethod('post')) {
+            $rules['sub_category_id'] = 'required|exists:sub_categories,id';
+        }
+
+        return $rules;
     }
+
 
     public function messages()
     {

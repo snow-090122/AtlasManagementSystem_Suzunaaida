@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use App\Models\Categories\MainCategory;
 use App\Models\Categories\SubCategory;
 use App\Models\Posts\Post;
+use App\Models\PostSubCategory;
 use App\Models\Posts\PostComment;
 use App\Models\Posts\Like;
 use App\Models\Users\User;
@@ -76,12 +77,25 @@ class PostsController extends Controller
             'post_title' => $request->post_title,
             'post' => $request->post_body
         ]);
-        return redirect()->route('post.show');
+
+        if ($request->has('sub_category_id')) {
+            $subCategoryId = (int) $request->sub_category_id;
+            $post->subCategories()->sync([$subCategoryId]); // 中間テーブルに登録
+        }
+
+        return redirect()->route('post.show')->with('success', '投稿が完了しました！');
     }
 
-    public function postUpdate(PostFormRequest $request)
+    public function postUpdate(PostFormRequest $request, $id)
     {
-        $post = Post::findOrFail($request->post_id);
+        if (!$request->isMethod('put')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'リクエストメソッドが正しくありません。'
+            ], 405);
+        }
+
+        $post = Post::findOrFail($id);
 
         if ($post->user_id !== Auth::id()) {
             return response()->json([
@@ -90,16 +104,17 @@ class PostsController extends Controller
             ], 403);
         }
 
+        // 更新処理
         $post->update([
             'post_title' => $request->post_title,
-            'post' => $request->post_body,
+            'post_body' => $request->post_body,
         ]);
 
         return response()->json([
             'success' => true,
             'message' => '投稿が更新されました。',
             'updated_title' => $post->post_title,
-            'updated_body' => $post->post
+            'updated_body' => $post->post_body
         ]);
     }
 
@@ -131,8 +146,6 @@ class PostsController extends Controller
             ->header("Pragma", "no-cache")
             ->header("Expires", "Fri, 01 Jan 1990 00:00:00 GMT");
     }
-
-
 
     public function mainCategoryCreate(Request $request)
     {
@@ -178,6 +191,7 @@ class PostsController extends Controller
         $like = new Like;
         return view('authenticated.bulletinboard.post_myself', compact('posts', 'like'));
     }
+
 
     public function likeBulletinBoard()
     {
@@ -265,4 +279,5 @@ class PostsController extends Controller
 
         return redirect()->back()->with('success', 'コメントを投稿しました。');
     }
+
 }

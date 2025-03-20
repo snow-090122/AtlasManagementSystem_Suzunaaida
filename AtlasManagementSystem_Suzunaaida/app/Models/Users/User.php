@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Posts\Like;
 use App\Models\Subjects\Subject;
+use App\Models\Posts\Post;
 
 class User extends Authenticatable
 {
@@ -41,7 +42,7 @@ class User extends Authenticatable
 
     public function posts()
     {
-        return $this->hasMany('App\Models\Posts\Post');
+        return $this->hasMany(Post::class, 'user_id');
     }
 
     public function calendars()
