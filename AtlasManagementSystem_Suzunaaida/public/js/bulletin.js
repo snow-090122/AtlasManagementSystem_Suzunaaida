@@ -92,83 +92,19 @@ $(function () {
   });
 
   //編集モーダル
-  $(document).ready(function () {
-    // 編集ボタンをクリックしてモーダルを開く
-    $(document).on('click', '.edit-modal-open', function (event) {
-      event.preventDefault(); // デフォルトの動作を防ぐ
-      event.stopPropagation(); // イベントの伝播を防ぐ
-
-      $('.js-modal').fadeIn();
-
-      let post_id = $(this).attr('post_id');
-      let post_title = $(this).attr('post_title');
-      let post_body = $(this).attr('post_body');
-
-      $('#edit-post-id').val(post_id);
-      $('#edit-post-title').val(post_title);
-      $('#edit-post-body').val(post_body);
-    });
-
-    // モーダルを閉じる処理
-    $(document).on('click', '.js-modal-close', function () {
-      $('.js-modal').fadeOut();
-    });
-
-    // 編集フォームの送信（Ajax）
-    $(document).on('submit', '#edit-post-form', function (event) {
-      event.preventDefault(); // デフォルトのフォーム送信を防ぐ
-      event.stopPropagation();
-
-      let post_id = $('#edit-post-id').val();
-      let url = `/bulletin_board/update/${post_id}`;
-
-      let formData = new FormData();
-      formData.append('_token', $('meta[name="csrf-token"]').attr('content')); // CSRFトークン
-      formData.append('_method', 'PUT'); // LaravelのPUTメソッド識別
-      formData.append('post_title', $('#edit-post-title').val());
-      formData.append('post_body', $('#edit-post-body').val());
-
-      $.ajax({
-        url: url,
-        type: 'POST',  // LaravelはフォームでPUTメソッドを受け付けないため、POSTで送る
-        data: formData,
-        processData: false,
-        contentType: false,
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // CSRFトークンをヘッダーに追加
-        },
-        success: function (response) {
-          if (response.success) {
-            // 投稿の内容を更新
-            $(`#post-title-${post_id}`).text(response.updated_title);
-            $(`#post-body-${post_id}`).text(response.updated_body);
-
-            // モーダルを閉じる
-            $('.js-modal').fadeOut();
-          }
-        },
-        error: function (xhr) {
-          console.log(xhr.responseJSON); // デバッグ用
-
-          let errors = xhr.responseJSON.errors;
-
-          $('#error-post-title').html('');
-          $('#error-post-body').html('');
-
-          if (errors && errors.post_title) {
-            errors.post_title.forEach(function (error) {
-              $('#error-post-title').append(`<li>${error}</li>`);
-            });
-          }
-
-          if (errors && errors.post_body) {
-            errors.post_body.forEach(function (error) {
-              $('#error-post-body').append(`<li>${error}</li>`);
-            });
-          }
-        }
-      });
-    });
+  $('.edit-modal-open').on('click', function () {
+    $('.js-modal').fadeIn();
+    var post_title = $(this).attr('post_title');
+    var post_body = $(this).attr('post_body');
+    var post_id = $(this).attr('post_id');
+    $('.modal-inner-title input').val(post_title);
+    $('.modal-inner-body textarea').text(post_body);
+    $('.edit-modal-hidden').val(post_id);
+    return false;
+  });
+  $('.js-modal-close').on('click', function () {
+    $('.js-modal').fadeOut();
+    return false;
   });
 
 });

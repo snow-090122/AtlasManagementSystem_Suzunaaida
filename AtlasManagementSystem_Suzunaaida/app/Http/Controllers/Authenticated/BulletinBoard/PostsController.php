@@ -25,15 +25,26 @@ class PostsController extends Controller
             ->latest();
 
         if (!empty($request->keyword)) {
-            $posts->where(function ($query) use ($request) {
-                $query->where('post_title', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('post', 'like', '%' . $request->keyword . '%');
-            });
+            // キーワードがサブカテゴリー名と完全一致するかチェック
+            $subcategory = SubCategory::where('sub_category', $request->keyword)->first();
+
+            if ($subcategory) {
+                // 一致する場合、そのサブカテゴリーの投稿のみ取得
+                $posts->whereHas('subCategories', function ($query) use ($subcategory) {
+                    $query->where('sub_categories.id', $subcategory->id);
+                });
+            } else {
+                // 一致しない場合、タイトル・投稿内容のあいまい検索
+                $posts->where(function ($query) use ($request) {
+                    $query->where('post_title', 'like', '%' . $request->keyword . '%')
+                        ->orWhere('post', 'like', '%' . $request->keyword . '%');
+                });
+            }
         }
 
         if ($request->category_word) {
             $sub_category = $request->category_word;
-            $posts->whereHas('subCategory', function ($query) use ($sub_category) {
+            $posts->whereHas('subCategories', function ($query) use ($sub_category) {
                 $query->where('id', $sub_category);
             });
         }
@@ -86,37 +97,17 @@ class PostsController extends Controller
         return redirect()->route('post.show')->with('success', '投稿が完了しました！');
     }
 
-    public function postUpdate(PostFormRequest $request, $id)
+    public function postUpdate(Request $request, $id)
     {
-        if (!$request->isMethod('put')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'リクエストメソッドが正しくありません。'
-            ], 405);
-        }
-
         $post = Post::findOrFail($id);
-
-        if ($post->user_id !== Auth::id()) {
-            return response()->json([
-                'success' => false,
-                'message' => '他のユーザーの投稿は編集できません。'
-            ], 403);
-        }
-
-        // 更新処理
         $post->update([
             'post_title' => $request->post_title,
-            'post_body' => $request->post_body,
+            'post' => $request->post_body,
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => '投稿が更新されました。',
-            'updated_title' => $post->post_title,
-            'updated_body' => $post->post_body
-        ]);
+        return response()->json(['success' => true, 'message' => '更新成功']);
     }
+
 
     public function postDelete($id)
     {
@@ -187,9 +178,30 @@ class PostsController extends Controller
 
     public function myBulletinBoard()
     {
-        $posts = Auth::user()->posts()->get();
-        $like = new Like;
-        return view('authenticated.bulletinboard.post_myself', compact('posts', 'like'));
+        // ログインユーザーを取得
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'ログインしてください');
+        }
+
+        // 自分の投稿のみ取得
+        $posts = Post::with(['user', 'postComments', 'likes'])
+            ->withCount('likes', 'postComments')
+            ->where('user_id', $user->id)
+            ->latest()
+            ->get();
+
+        // カテゴリー情報を取得
+        $categories = MainCategory::all();
+        $liked_posts = Auth::user() ? Auth::user()->likePostId() : [];
+
+        // データ確認用
+        if ($posts->isEmpty()) {
+            return view('authenticated.bulletinboard.posts', compact('posts', 'categories', 'liked_posts'))
+                ->with('message', 'あなたの投稿はありません');
+        }
+
+        return view('authenticated.bulletinboard.posts', compact('posts', 'categories', 'liked_posts'));
     }
 
 
@@ -278,6 +290,20 @@ class PostsController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'コメントを投稿しました。');
+    }
+    public function showByCategory($sub_category_id)
+    {
+        // 指定されたサブカテゴリーに属する投稿を取得
+        $posts = Post::whereHas('subCategories', function ($query) use ($sub_category_id) {
+            $query->where('sub_categories.id', $sub_category_id);
+        })->with(['user', 'postComments', 'likes'])->withCount('likes', 'postComments')->latest()->get();
+
+        // カテゴリー情報を取得
+        $subCategory = SubCategory::findOrFail($sub_category_id);
+        $categories = MainCategory::all();
+        $liked_posts = Auth::user() ? Auth::user()->likePostId() : [];
+
+        return view('authenticated.bulletinboard.posts', compact('posts', 'categories', 'liked_posts', 'subCategory'));
     }
 
 }
