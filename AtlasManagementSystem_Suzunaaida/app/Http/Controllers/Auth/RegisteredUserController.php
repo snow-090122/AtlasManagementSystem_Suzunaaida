@@ -57,9 +57,10 @@ class RegisteredUserController extends Controller
                 'password' => bcrypt($request->password)
             ]);
 
-            if ($request->role == 4 && !empty($request->subject)) {
-                $user_get->subjects()->attach($request->subject);
+            if ($request->role == 4 && !empty($request->subjects)) {
+                $user_get->subjects()->sync($request->subjects); // ✅ 修正ポイント
             }
+
 
             DB::commit();
             return view('auth.login.login');
