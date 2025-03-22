@@ -65,9 +65,10 @@
     </div>
   </div>
 
+
   <!-- CSRFトークンをmetaタグに含める -->
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <script src="{{ asset('js/post-edit.js') }}"></script>
+
   <!-- 編集モーダル -->
   <div class="modal js-modal">
     <div class="modal__bg js-modal-close"></div>

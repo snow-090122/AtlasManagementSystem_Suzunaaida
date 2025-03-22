@@ -97,14 +97,53 @@ $(function () {
     var post_title = $(this).attr('post_title');
     var post_body = $(this).attr('post_body');
     var post_id = $(this).attr('post_id');
-    $('.modal-inner-title input').val(post_title);
-    $('.modal-inner-body textarea').text(post_body);
-    $('.edit-modal-hidden').val(post_id);
+    $('#edit-post-title').val(post_title);
+    $('#edit-post-body').val(post_body);
+    $('#edit-post-id').val(post_id); // ✅ ←ここを修正！
     return false;
   });
+
+  //モーダルを閉じるとき
   $('.js-modal-close').on('click', function () {
     $('.js-modal').fadeOut();
     return false;
+  });
+
+  //編集フォームを送信するとき
+  $('#edit-post-form').on('submit', function (e) {
+    e.preventDefault();
+
+    let postId = $('#edit-post-id').val();
+    let title = $('#edit-post-title').val();
+    let body = $('#edit-post-body').val();
+
+    $('#error-post-title').empty();
+    $('#error-post-body').empty();
+
+    $.ajax({
+      url: `/bulletin_board/update/${postId}`,
+      type: 'PUT',
+      data: {
+        _token: $('meta[name="csrf-token"]').attr('content'),
+        post_title: title,
+        post_body: body
+      },
+      success: function (response) {
+        alert('投稿が更新されました！');
+        location.reload(); // または部分的にDOMを更新
+      },
+      error: function (xhr) {
+        if (xhr.status === 422) {
+          let errors = xhr.responseJSON.errors;
+          if (errors.post_title) {
+            $('#error-post-title').append(`<li>${errors.post_title[0]}</li>`);
+          }
+          if (errors.post_body) {
+            $('#error-post-body').append(`<li>${errors.post_body[0]}</li>`);
+          }
+        }
+      }
+    });
   });
 
 });
