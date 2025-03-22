@@ -3,36 +3,29 @@ namespace App\Searchs;
 
 use App\Models\Users\User;
 
-class SelectIdDetails implements DisplayUsers{
+class SelectIdDetails implements DisplayUsers
+{
+  public function resultUsers($keyword, $category, $updown, $gender, $role, $subjects)
+  {
+    $updown = strtolower($updown);
+    if (!in_array($updown, ['asc', 'desc'])) {
+      $updown = 'asc';
+    }
 
-  // 改修課題：選択科目の検索機能
-  public function resultUsers($keyword, $category, $updown, $gender, $role, $subjects){
-    if(is_null($keyword)){
-      $keyword = User::get('id')->toArray();
-    }else{
-      $keyword = array($keyword);
-    }
-    if(is_null($gender)){
-      $gender = ['1', '2', '3'];
-    }else{
-      $gender = array($gender);
-    }
-    if(is_null($role)){
-      $role = ['1', '2', '3', '4'];
-    }else{
-      $role = array($role);
-    }
+    $keyword = is_null($keyword) ? User::pluck('id')->toArray() : [$keyword];
+    $gender = is_null($gender) ? ['1', '2', '3'] : [$gender];
+    $role = is_null($role) ? ['1', '2', '3', '4'] : [$role];
+
     $users = User::with('subjects')
-    ->whereIn('id', $keyword)
-    ->where(function($q) use ($role, $gender){
-      $q->whereIn('sex', $gender)
-      ->whereIn('role', $role);
-    })
-    ->whereHas('subjects', function($q) use ($subjects){
-      $q->where('subjects.id', $subjects);
-    })
-    ->orderBy('id', $updown)->get();
+      ->whereIn('id', $keyword)
+      ->whereIn('sex', $gender)
+      ->whereIn('role', $role)
+      ->whereHas('subjects', function ($q) use ($subjects) {
+        $q->whereIn('subjects.id', $subjects);
+      })
+      ->orderBy('id', $updown)
+      ->get();
+
     return $users;
   }
-
 }

@@ -85,6 +85,7 @@
               <span>その他</span><input type="radio" name="sex" value="3" form="userSearchRequest">
             </div>
             <div>
+
               <label>権限</label>
               <select name="role" form="userSearchRequest" class="engineer">
                 <option selected disabled>----</option>
@@ -96,6 +97,12 @@
             </div>
             <div class="selected_engineer">
               <label>選択科目</label>
+              @foreach ($subjects as $subject)
+          <label>
+          <input type="checkbox" name="subject[]" value="{{ $subject->id }}" form="userSearchRequest">
+          {{ $subject->subject }}
+          </label><br>
+        @endforeach
             </div>
           </div>
         </div>
