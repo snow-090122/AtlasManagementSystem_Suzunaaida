@@ -26,15 +26,39 @@ class CalendarController extends Controller
             $getPart = $request->getPart;
             $getDate = $request->getData;
             $reserveDays = array_filter(array_combine($getDate, $getPart));
+            \Log::debug('予約データ:', $reserveDays); // ←ログ追加
+
             foreach ($reserveDays as $key => $value) {
-                $reserve_settings = ReserveSettings::where('setting_reserve', $key)->where('setting_part', $value)->first();
+                \Log::debug("予約処理: 日付={$key}, 部={$value}");
+
+                $reserve_settings = ReserveSettings::where('setting_reserve', $key)
+                    ->where('setting_part', $value)
+                    ->first();
+
+                if (!$reserve_settings) {
+                    \Log::debug("❌ 該当予約枠なし: {$key} - {$value}");
+                    continue;
+                }
+
+                \Log::debug("✅ 該当予約枠あり: ID={$reserve_settings->id}");
+
                 $reserve_settings->decrement('limit_users');
-                $reserve_settings->users()->attach(Auth::id());
+                \Log::debug("💡 Auth::id() = " . Auth::id());
+                \Log::debug("💡 Auth::user() = " . Auth::user());
+
+                $reserve_settings->users()->attach(Auth::user()->id);
+
+
+                \Log::debug("✅ ユーザーID " . Auth::id() . " を予約枠に紐付けました");
             }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
+            \Log::error("予約失敗: " . $e->getMessage());
         }
+
         return redirect()->route('calendar.general.show', ['user_id' => Auth::id()]);
     }
+
 }

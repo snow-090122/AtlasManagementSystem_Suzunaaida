@@ -22,19 +22,16 @@ class CalendarView
   {
     $html = [];
     $html[] = '<div class="calendar text-center">';
-    $html[] = '<table class="table">';
+    $html[] = '<table class="table table-bordered m-auto" style="table-layout: fixed; width: 100%;">';
     $html[] = '<thead>';
     $html[] = '<tr>';
-    $html[] = '<th>月</th>';
-    $html[] = '<th>火</th>';
-    $html[] = '<th>水</th>';
-    $html[] = '<th>木</th>';
-    $html[] = '<th>金</th>';
-    $html[] = '<th>土</th>';
-    $html[] = '<th>日</th>';
+    $weekdays = ['月', '火', '水', '木', '金', '土', '日'];
+    foreach ($weekdays as $day) {
+      $html[] = '<th class="border" style="width: 14.28%;">' . $day . '</th>';
+    }
     $html[] = '</tr>';
     $html[] = '</thead>';
-    $html[] = '<tbody>';
+
     $weeks = $this->getWeeks();
     foreach ($weeks as $week) {
       $html[] = '<tr class="' . $week->getClassName() . '">';
@@ -45,7 +42,7 @@ class CalendarView
         $currentDate = $dateStr ? Carbon::parse($dateStr) : null;
 
         $isCurrentMonth = $currentDate && $currentDate->format('m') == $this->carbon->format('m');
-        $isPast = $currentDate && $currentDate->lt(Carbon::today());
+        $isPast = $currentDate && $currentDate->lte(Carbon::today());
 
         $tdClass = 'calendar-td';
         if (!$isCurrentMonth) {

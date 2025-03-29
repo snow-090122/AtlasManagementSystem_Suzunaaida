@@ -37,22 +37,36 @@ class CalendarsController extends Controller
         $reserveDays = $request->input('reserve_day');
         foreach ($reserveDays as $day => $parts) {
             foreach ($parts as $part => $frame) {
-                if (!is_numeric($frame) || intval($frame) <= 0) {
-                    continue; // ← これでスキップ
-                }
-
                 ReserveSettings::updateOrCreate([
                     'setting_reserve' => $day,
                     'setting_part' => $part,
                 ], [
                     'setting_reserve' => $day,
                     'setting_part' => $part,
-                    'limit_users' => intval($frame),
+                    'limit_users' => $frame,
                 ]);
             }
         }
-
         return redirect()->route('calendar.admin.setting', ['user_id' => Auth::id()]);
     }
+    public function reserve(Request $request)
+    {
+        $user = Auth::user();
+        $reserveDay = $request->input('reserve_day');
+        $reservePart = $request->input('reserve_part');
+
+        // 予約枠が存在するか確認
+        $reserveSetting = ReserveSettings::where('setting_reserve', $reserveDay)
+            ->where('setting_part', $reservePart)
+            ->first();
+
+        if ($reserveSetting) {
+            // 🔽 修正ポイントここ！
+            $reserveSetting->users()->syncWithoutDetaching([$user->id]);
+        }
+
+        return redirect()->route('calendar.admin.show', ['user_id' => $user->id]);
+    }
+
 
 }
