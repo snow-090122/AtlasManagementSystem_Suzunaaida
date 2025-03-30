@@ -32,15 +32,9 @@ class CalendarWeekDay
   {
     $html = [];
 
-    if (Carbon::parse($ymd)->lte(Carbon::today())) {
-      $html[] = '<p class="m-0 pt-1 text-white">受付終了</p>';
-      return implode('', $html);
-    }
-
     $userId = auth()->id();
     $reservedParts = [];
 
-    // 予約済みチェック
     foreach ([1, 2, 3] as $part) {
       $reserve = ReserveSettings::with('users')
         ->where('setting_reserve', $ymd)
@@ -54,27 +48,30 @@ class CalendarWeekDay
 
     $html[] = '<div class="text-left">';
 
-    if (!empty($reservedParts)) {
-      foreach ($reservedParts as $part) {
-        $html[] = '<p class="day_part m-0 pt-1 text-danger">リモ' . $part . '部 予約済</p>';
-      }
-    } else {
-      // 通常の枠だけを表示（予約していない場合）
-      foreach ([1, 2, 3] as $part) {
-        $reserve = ReserveSettings::where('setting_reserve', $ymd)
-          ->where('setting_part', $part)
-          ->first();
+    foreach ([1, 2, 3] as $part) {
+      $reserve = ReserveSettings::withCount('users')
+        ->where('setting_reserve', $ymd)
+        ->where('setting_part', $part)
+        ->first();
 
-        if ($reserve) {
-          $html[] = '<p class="day_part m-0 pt-1">リモ' . $part . '部</p>';
-        }
+      $count = $reserve ? $reserve->users_count : 0;
+
+      if (in_array($part, $reservedParts)) {
+        $html[] = '<p class="day_part m-0 pt-1 text-danger">リモ' . $part . '部 予約済</p>';
+      } else {
+        $link = route('calendar.admin.detail', ['date' => $ymd, 'part' => $part]);
+        $html[] = '<p class="day_part m-0 pt-1">
+                          <a href="' . $link . '" style="color: blue; text-decoration: underline;">
+                            リモ' . $part . '部 ' . $count . '
+                          </a>
+                       </p>';
       }
     }
 
     $html[] = '</div>';
-
     return implode("", $html);
   }
+
 
   function onePartFrame($day)
   {
