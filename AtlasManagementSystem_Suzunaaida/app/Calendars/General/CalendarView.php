@@ -64,10 +64,14 @@ class CalendarView
           $reserveLabel = 'リモ' . $reservePart . '部';
 
           if (!$isPast) {
-            $html[] = '<button type="submit" class="btn btn-danger p-0 w-75" name="delete_date" style="font-size:12px" value="' . $day->authReserveDate($dateStr)->first()->setting_reserve . '">' . $reserveLabel . '</button>';
+            $html[] = '<button type="button" class="btn btn-danger p-0 w-75 open-cancel-modal"';
+            $html[] = ' data-date="' . $dateStr . '"';
+            $html[] = ' data-time="' . $reserveLabel . '"';
+            $html[] = ' style="font-size:12px">' . $reserveLabel . '</button>';
           } else {
             $html[] = '<p class="m-auto p-0 w-75" style="font-size:12px">' . $reserveLabel . '参加</p>';
           }
+
 
           $html[] = '<input type="hidden" name="getPart[]" value="" form="reserveParts">';
         } else {

@@ -81,8 +81,8 @@ class User extends Authenticatable
         return $this->likes()->pluck('like_post_id')->toArray(); // ✅ 配列で返す
     }
 
-    public function getAuthIdentifierName()
-    {
-        return 'mail_address';
-    }
+    // public function getAuthIdentifierName()
+    // {
+    //     return 'mail_address';
+    // }
 }

@@ -99,7 +99,7 @@ $(function () {
     var post_id = $(this).attr('post_id');
     $('#edit-post-title').val(post_title);
     $('#edit-post-body').val(post_body);
-    $('#edit-post-id').val(post_id); // ✅ ←ここを修正！
+    $('#edit-post-id').val(post_id);
     return false;
   });
 

@@ -67,6 +67,4 @@ class CalendarsController extends Controller
 
         return redirect()->route('calendar.admin.show', ['user_id' => $user->id]);
     }
-
-
 }
