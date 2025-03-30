@@ -277,3 +277,39 @@ li {
 .subject_inner {
   display: none;
 }
+
+/* ログイン画面用スタイル */
+.login-page {
+  background-color: #ECF1F6;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ロゴ画像 */
+.login-logo {
+  max-width: 150px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+/* ログインフォームの枠 */
+.login-form-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 320px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 入力欄 */
+.login-input {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-bottom: 1px solid #03AAD2;
+  outline: none;
+  background-color: transparent;
+}
