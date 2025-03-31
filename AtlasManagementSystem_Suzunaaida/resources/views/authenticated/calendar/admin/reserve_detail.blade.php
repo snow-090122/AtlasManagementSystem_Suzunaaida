@@ -14,18 +14,19 @@
             </tr>
           </thead>
           <tbody>
-            {{-- データがある場合 --}}
-            @forelse ($reserveSetting->users as $user)
-        <tr>
-          <td>{{ $user->id }}</td>
-          <td>{{ $user->over_name }} {{ $user->under_name }}</td>
-          <td>リモート</td>
-        </tr>
-      @empty
+            @if ($reserveSetting && $reserveSetting->users->isNotEmpty())
+        @foreach ($reserveSetting->users as $user)
+      <tr>
+        <td>{{ $user->id }}</td>
+        <td>{{ $user->over_name }} {{ $user->under_name }}</td>
+        <td>リモート</td>
+      </tr>
+    @endforeach
+      @else
     <tr>
       <td colspan="3">予約者はいません</td>
     </tr>
-  @endforelse
+  @endif
           </tbody>
         </table>
       </div>

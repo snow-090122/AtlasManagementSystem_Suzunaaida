@@ -20,7 +20,7 @@ class PostsController extends Controller
 {
     public function show(Request $request)
     {
-        $posts = Post::with(['user', 'postComments', 'likes'])
+        $posts = Post::with(['user', 'postComments', 'likes', 'subCategories'])
             ->withCount('likes', 'postComments')
             ->latest();
 
