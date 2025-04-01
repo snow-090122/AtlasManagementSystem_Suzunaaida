@@ -1,13 +1,15 @@
 <x-sidebar>
   <div class="vh-100 d-flex">
     <div class="w-50 mt-5">
-      <div class="m-3 detail_container">
+      <div class="m-3 detail_container rounded">
         <div class="p-3">
           <div class="detail_inner_head">
             <div></div>
             <div>
               @if($post->user_id == Auth::user()->id)
-          <span class="edit-modal-open" post_title="{{ $post->post_title }}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">編集</span>
+          <button type="button" class="edit-modal-open btn btn-primary" post_title="{{ $post->post_title }}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">
+          編集
+          </button>
           <button class="js-delete-btn btn btn-danger" data-post-id="{{ $post->id }}">
           削除
           </button>
@@ -46,19 +48,21 @@
     <div class="w-50 p-3">
       <div class="comment_container border m-5">
         <div class="comment_area p-3">
+          @if ($errors->has('comment'))
+        <ul class="text-danger">
+        @foreach ($errors->get('comment') as $message)
+      <li>{{ $message }}</li>
+    @endforeach
+        </ul>
+      @endif
           <p class="m-0">コメントする</p>
           <form action="{{ route('comment.create') }}" method="post" id="commentRequest">
             {{ csrf_field() }}
-            @if ($errors->has('comment'))
-        <ul class="text-danger">
-          @foreach ($errors->get('comment') as $message)
-        <li>{{ $message }}</li>
-      @endforeach
-        </ul>
-      @endif
             <textarea class="w-100" name="comment"></textarea>
             <input type="hidden" name="post_id" value="{{ $post->id }}">
-            <input type="submit" class="btn btn-primary" value="投稿">
+            <div class=" d-flex justify-content-end mt-2">
+              <input type="submit" class="btn btn-primary" value="投稿">
+            </div>
           </form>
         </div>
       </div>
@@ -80,35 +84,23 @@
 
         <!-- タイトル入力 -->
         <div class="modal-inner-title w-50 m-auto">
+          <ul class="text-danger mb-1" id="error-post-title" style="font-size: 14px;"></ul>
           <input type="text" name="post_title" id="edit-post-title" placeholder="タイトル" class="w-100">
-          <ul class="text-danger" id="error-post-title"></ul>
         </div>
 
         <!-- 投稿内容入力 -->
         <div class="modal-inner-body w-50 m-auto">
+          <ul class="text-danger mb-1" id="error-post-body" style="font-size: 14px;"></ul>
           <textarea name="post_body" id="edit-post-body" placeholder="投稿内容" class="w-100"></textarea>
-          <ul class="text-danger" id="error-post-body"></ul>
         </div>
-
-        <!-- ボタン -->
-        <div class="modal-buttons">
-          <button type="button" class="js-modal-close btn btn-secondary">閉じる</button>
-          <button type="submit" class="btn btn-primary">編集</button>
+        <div class="w-50 m-auto edit-modal-btn d-flex">
+          <a class="js-modal-close btn btn-danger d-inline-block" href="">閉じる</a>
+          <input type="hidden" class="edit-modal-hidden" name="post_id" value="{{ $post->id }}">
+          <input type="submit" class="btn btn-primary d-block" value="編集">
         </div>
-      </form>
     </div>
-  </div>
-
-
-
-  <div class="w-50 m-auto edit-modal-btn d-flex">
-    <a class="js-modal-close btn btn-danger d-inline-block" href="">閉じる</a>
-    <input type="hidden" class="edit-modal-hidden" name="post_id" value="{{ $post->id }}">
-    <input type="submit" class="btn btn-primary d-block" value="編集">
-  </div>
-  </div>
-  {{ csrf_field() }}
-  </form>
+    {{ csrf_field() }}
+    </form>
   </div>
   </div>
 

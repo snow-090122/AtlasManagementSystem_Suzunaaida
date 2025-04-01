@@ -1,14 +1,10 @@
 @charset "utf-8";
 
+/* 共通スタイル（リセット・基本） */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-}
-
-/* body */
-.all_content {
-  background: #ECF1F6;
 }
 
 ul,
@@ -16,7 +12,11 @@ li {
   list-style: none;
 }
 
-/* サイドバー */
+.all_content {
+  background: #ECF1F6;
+}
+
+/* サイドバー*/
 .sidebar {
   width: 150px;
   height: 100vh;
@@ -32,7 +32,7 @@ li {
   color: #FFF;
 }
 
-/* トップページ */
+/* トップページ（ユーザー情報等） */
 .user_status {
   border-radius: 10px;
   background: #FFF;
@@ -106,9 +106,46 @@ li {
   width: 60%;
 }
 
-/* 掲示板 */
-.sub_categories {
-  display: none;
+/* 掲示板（投稿・一覧・詳細） */
+.main_categories {
+  list-style: none;
+  padding: 8px 12px;
+  border-bottom: 1px solid #ccc;
+  font-size: 16px;
+  color: #000;
+  cursor: pointer;
+  position: relative;
+}
+
+.main_categories .category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toggle-arrow {
+  font-size: 16px;
+  color: #333;
+}
+
+.sub-category-list {
+  margin-top: 8px;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.sub-category-list li {
+  padding: 6px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.sub-category-list li a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.sub-category-list li a:hover {
+  text-decoration: underline;
 }
 
 .post_create_area {
@@ -129,10 +166,44 @@ li {
 .post_area {
   background: #FFF;
   border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+  padding: 16px;
+  transition: transform 0.2s ease;
+}
+
+.post_area:hover {
+  transform: translateY(-2px);
+}
+
+.post_area a {
+  color: #000;
+  font-size: 1.1rem;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.post_area a:hover {
+  text-decoration: underline;
 }
 
 .post_bottom_area {
+  display: flex;
   justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.category_box {
+  border-radius: 8px;
+  padding: 4px 10px;
+  background: #03AAD2;
+  font-size: 12px;
+  color: #fff;
+  display: inline-block;
+  font-weight: bold;
+  margin-right: 4px;
 }
 
 .like_btn,
@@ -145,12 +216,31 @@ li {
   color: #E2254D;
 }
 
-.error_message {
-  font-size: 12px;
-  color: red;
+.comment_btn {
+  background: #f2f2f2;
+  color: #333;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
-/* 掲示板 詳細画面 */
+.like_btn_area i {
+  padding: 6px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  background: #fff;
+  color: #E2254D;
+  cursor: pointer;
+}
+
+.like_btn_area i.not_liked {
+  color: #aaa;
+}
+
+/* 掲示板 詳細 */
 .contributor {
   font-size: 12px;
   color: #999;
@@ -184,7 +274,6 @@ li {
   justify-content: space-between;
 }
 
-/* 掲示板 コメント */
 .comment_container {
   background: #FFF;
 }
@@ -208,36 +297,96 @@ li {
   font-size: 12px;
 }
 
-/* 掲示板　カテゴリー */
-.category_area {
-  background: #FFF;
-  border-radius: 10px;
-}
-
-.category_box {
-  border-radius: 5px;
-  padding: 3px;
-  background: #999;
-  font-size: 10px;
-  color: #FFF;
-}
-
-.category_btn {
-  font-size: 12px;
-  border-radius: 5px;
-  padding: 0 5px;
+/* 掲示板 検索・サイドバー */
+.form_btn {
+  display: inline-block;
+  padding: 8px 0;
+  width: 100%;
   border: none;
-  background: #999;
-  color: #FFF;
-}
-
-.main_categories span,
-.sub_categories li input {
-  list-style: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
   cursor: pointer;
+  transition: 0.2s;
+  text-decoration: none;
 }
 
-/* ユーザー検索 */
+.blue_btn {
+  background-color: #03AAD2;
+  color: white;
+}
+
+.post_btn {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 2px solid #03AAD2;
+  color: #03AAD2;
+  border-radius: 10px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  width: 100%;
+}
+
+.search_group {
+  display: flex;
+  height: 44px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #03AAD2;
+  background: #fff;
+  width: 100%;
+}
+
+.search_group input[type="text"] {
+  flex: 1;
+  padding: 0 14px;
+  border: none;
+  font-size: 14px;
+  outline: none;
+  background: transparent;
+  height: 100%;
+}
+
+.search_group button {
+  padding: 0 18px;
+  background: #03AAD2;
+  color: white;
+  border: none;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  height: 100%;
+  white-space: nowrap;
+}
+
+.like_post_btn {
+  background-color: #f194b4;
+  border: 1px solid #f194b4;
+  color: #fff;
+  padding: 8px 0;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+}
+
+.my_post_btn {
+  background-color: #f7c948;
+  border: 1px solid #f7c948;
+  color: #fff;
+  padding: 8px 0;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* ユーザー検索ページ */
 .reserve_users_area {
   display: flex;
   flex-wrap: wrap;
@@ -278,7 +427,7 @@ li {
   display: none;
 }
 
-/* ログイン画面用スタイル */
+/* ログインページ */
 .login-page {
   background-color: #ECF1F6;
   height: 100vh;
@@ -288,14 +437,12 @@ li {
   align-items: center;
 }
 
-/* ロゴ画像 */
 .login-logo {
   max-width: 150px;
   height: auto;
   margin-bottom: 20px;
 }
 
-/* ログインフォームの枠 */
 .login-form-box {
   background: #fff;
   padding: 30px;
@@ -304,7 +451,6 @@ li {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* 入力欄 */
 .login-input {
   width: 100%;
   padding: 8px;
@@ -312,4 +458,89 @@ li {
   border-bottom: 1px solid #03AAD2;
   outline: none;
   background-color: transparent;
+}
+
+/* 新規ユーザー登録ページ*/
+.register-page {
+  background-color: #ECF1F6;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0;
+}
+
+.register-form-box {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 360px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.form-group,
+.form-group-row>.form-group {
+  margin-bottom: 6px;
+}
+
+.form-group-row {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.form-label {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 0px;
+  display: block;
+}
+
+.form-input {
+  border-bottom: 1px solid #03AAD2;
+}
+
+.input-field {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+}
+
+.form-select,
+input[type="radio"],
+label {
+  font-size: 13px;
+}
+
+.radio-group {
+  display: inline-flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.radio-group2 {
+  display: inline-flex;
+  justify-content: space-between;
+  gap: 80px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+/* 共通・その他 */
+.error-message {
+  color: red;
+  font-size: 11px;
+  margin-bottom: 2px;
+  line-height: 1.2;
 }

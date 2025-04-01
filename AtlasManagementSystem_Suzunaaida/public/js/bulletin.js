@@ -1,8 +1,16 @@
 $(function () {
   $('.main_categories').click(function () {
     var category_id = $(this).attr('category_id');
-    $('.category_num' + category_id).slideToggle();
+    var subList = $('.category_num' + category_id);
+    var arrowIcon = $('#arrow' + category_id);
+
+    subList.slideToggle();
+
+    // アイコンクラスを切り替え
+    arrowIcon.toggleClass('fa-chevron-down fa-chevron-up');
   });
+
+
   //いいねのコード
   $(document).on('click', '.like_btn', function (e) {
     e.preventDefault();

@@ -56,17 +56,23 @@ class CalendarWeekDay
 
       $count = $reserve ? $reserve->users_count : 0;
 
+      $link = route('calendar.admin.detail', ['date' => $ymd, 'part' => $part]);
+
       if (in_array($part, $reservedParts)) {
-        $html[] = '<p class="day_part m-0 pt-1 text-danger">リモ' . $part . '部 予約済</p>';
+        $html[] = '<p class="day_part m-0 pt-1 text-danger">
+                <a href="' . $link . '" style="color: red; text-decoration: underline;">
+                  リモ' . $part . '部 予約済 ' . $count . '
+                </a>
+              </p>';
       } else {
-        $link = route('calendar.admin.detail', ['date' => $ymd, 'part' => $part]);
         $html[] = '<p class="day_part m-0 pt-1">
-                          <a href="' . $link . '" style="color: blue; text-decoration: underline;">
-                            リモ' . $part . '部 ' . $count . '
-                          </a>
-                       </p>';
+                <a href="' . $link . '" style="color: blue; text-decoration: underline;">
+                  リモ' . $part . '部 ' . $count . '
+                </a>
+              </p>';
       }
     }
+
 
     $html[] = '</div>';
     return implode("", $html);

@@ -1,183 +1,108 @@
 <x-guest-layout>
   <form action="{{ route('registerPost') }}" method="POST">
     @csrf
-    <div class="w-100 vh-100 d-flex" style="align-items:center; justify-content:center;">
-      <div class="w-25 vh-75 border p-3">
-        <div class="register_form">
-          {{-- 姓と名 --}}
-          <div class="d-flex mt-3" style="justify-content:space-between">
-            <div class="" style="width:140px">
-              <label class="d-block m-0" style="font-size:13px">姓</label>
-              <div class="border-bottom border-primary" style="width:140px;">
-                <input type="text" style="width:140px;" class="border-0 over_name" name="over_name" value="{{ old('over_name') }}">
-              </div>
-              @error('over_name')
-          <div class="text-danger">{{ $message }}</div>
-        @enderror
-            </div>
-
-            <div class="" style="width:140px">
-              <label class=" d-block m-0" style="font-size:13px">名</label>
-              <div class="border-bottom border-primary" style="width:140px;">
-                <input type="text" style="width:140px;" class="border-0 under_name" name="under_name" value="{{ old('under_name') }}">
-              </div>
-              @error('under_name')
-          <div class="text-danger">{{ $message }}</div>
-        @enderror
-            </div>
-          </div>
-
-          {{-- カナ (セイ・メイ) --}}
-          <div class="d-flex mt-3" style="justify-content:space-between">
-            <div class="" style="width:140px">
-              <label class="d-block m-0" style="font-size:13px">セイ</label>
-              <div class="border-bottom border-primary" style="width:140px;">
-                <input type="text" style="width:140px;" class="border-0 over_name_kana" name="over_name_kana" value="{{ old('over_name_kana') }}">
-              </div>
-              @error('over_name_kana')
-          <div class="text-danger">{{ $message }}</div>
-        @enderror
-            </div>
-
-            <div class="" style="width:140px">
-              <label class="d-block m-0" style="font-size:13px">メイ</label>
-              <div class="border-bottom border-primary" style="width:140px;">
-                <input type="text" style="width:140px;" class="border-0 under_name_kana" name="under_name_kana" value="{{ old('under_name_kana') }}">
-              </div>
-              @error('under_name_kana')
-          <div class="text-danger">{{ $message }}</div>
-        @enderror
-            </div>
-          </div>
-
-          {{-- メールアドレス --}}
-          <div class="mt-3">
-            <label class="m-0 d-block" style="font-size:13px">メールアドレス</label>
-            <div class="border-bottom border-primary">
-              <input type="mail" class="w-100 border-0 mail_address" name="mail_address" value="{{ old('mail_address') }}">
-            </div>
-            @error('mail_address')
-        <div class="text-danger">{{ $message }}</div>
+    <div class="register-page">
+      <div class="register-form-box">
+        {{-- 姓と名 --}}
+        <div class="form-group-row">
+          <div class="form-group">
+            @error('over_name')
+        <div class="error-message">{{ $message }}</div>
       @enderror
+            <label for="over_name" class="form-label">姓</label>
+            <div class="form-input">
+              <input type="text" name="over_name" class="input-field" value="{{ old('over_name') }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            @error('under_name')
+        <div class="error-message">{{ $message }}</div>
+      @enderror
+            <label for="under_name" class="form-label">名</label>
+            <div class="form-input">
+              <input type="text" name="under_name" class="input-field" value="{{ old('under_name') }}">
+            </div>
           </div>
         </div>
 
-        <div class="mt-3">
-          <label class="d-block m-0" style="font-size:13px">性別</label>
-          <div>
-            <input type="radio" name="sex" class="sex" value="1" {{ old('sex') == 1 ? 'checked' : '' }}> 男性
-            <input type="radio" name="sex" class="sex" value="2" {{ old('sex') == 2 ? 'checked' : '' }}> 女性
-            <input type="radio" name="sex" class="sex" value="3" {{ old('sex') == 3 ? 'checked' : '' }}> その他
-          </div>
-          @error('sex')
-        <div class="text-danger">{{ $message }}</div>
+        {{-- カナ --}}
+        <div class="form-group-row">
+          <div class="form-group">
+            @error('over_name_kana')
+        <div class="error-message">{{ $message }}</div>
       @enderror
+            <label class="form-label">セイ</label>
+            <div class="form-input">
+              <input type="text" name="over_name_kana" class="input-field" value="{{ old('over_name_kana') }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            @error('under_name_kana')
+        <div class="error-message">{{ $message }}</div>
+      @enderror
+            <label class="form-label">メイ</label>
+            <div class="form-input">
+              <input type="text" name="under_name_kana" class="input-field" value="{{ old('under_name_kana') }}">
+            </div>
+          </div>
         </div>
 
-        <div class="mt-3">
-          <label class="d-block m-0 aa" style="font-size:13px">生年月日</label>
-          <select class="old_year" name="old_year">
-            <option value="none">-----</option>
-            <option value="1985">1985</option>
-            <option value="1986">1986</option>
-            <option value="1987">1987</option>
-            <option value="1988">1988</option>
-            <option value="1989">1989</option>
-            <option value="1990">1990</option>
-            <option value="1991">1991</option>
-            <option value="1992">1992</option>
-            <option value="1993">1993</option>
-            <option value="1994">1994</option>
-            <option value="1995">1995</option>
-            <option value="1996">1996</option>
-            <option value="1997">1997</option>
-            <option value="1998">1998</option>
-            <option value="1999">1999</option>
-            <option value="2000">2000</option>
-            <option value="2001">2001</option>
-            <option value="2002">2002</option>
-            <option value="2003">2003</option>
-            <option value="2004">2004</option>
-            <option value="2005">2005</option>
-            <option value="2006">2006</option>
-            <option value="2007">2007</option>
-            <option value="2008">2008</option>
-            <option value="2009">2009</option>
-            <option value="2010">2010</option>
-          </select>
-          <label style="font-size:13px">年</label>
-          <select class="old_month" name="old_month">
-            <option value="none">-----</option>
-            <option value="01">1</option>
-            <option value="02">2</option>
-            <option value="03">3</option>
-            <option value="04">4</option>
-            <option value="05">5</option>
-            <option value="06">6</option>
-            <option value="07">7</option>
-            <option value="08">8</option>
-            <option value="09">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-          </select>
-          <label style="font-size:13px">月</label>
-          <select class="old_day" name="old_day">
-            <option value="none">-----</option>
-            <option value="01">1</option>
-            <option value="02">2</option>
-            <option value="03">3</option>
-            <option value="04">4</option>
-            <option value="05">5</option>
-            <option value="06">6</option>
-            <option value="07">7</option>
-            <option value="08">8</option>
-            <option value="09">9</option>
-            <option value="10">10</option>
-            <option value="11">11</option>
-            <option value="12">12</option>
-            <option value="13">13</option>
-            <option value="14">14</option>
-            <option value="15">15</option>
-            <option value="16">16</option>
-            <option value="17">17</option>
-            <option value="18">18</option>
-            <option value="19">19</option>
-            <option value="20">20</option>
-            <option value="21">21</option>
-            <option value="22">22</option>
-            <option value="23">23</option>
-            <option value="24">24</option>
-            <option value="25">25</option>
-            <option value="26">26</option>
-            <option value="27">27</option>
-            <option value="28">28</option>
-            <option value="29">29</option>
-            <option value="30">30</option>
-            <option value="31">31</option>
-          </select>
-          <label style="font-size:13px">日</label>
-          {{-- 生年月日のエラーメッセージ --}}
+        {{-- メールアドレス --}}
+        <div class="form-group">
+          @error('mail_address')
+        <div class="error-message">{{ $message }}</div>
+      @enderror
+          <label class="form-label">メールアドレス</label>
+          <div class="form-input">
+            <input type="email" name="mail_address" class="input-field" value="{{ old('mail_address') }}">
+          </div>
+        </div>
+
+        {{-- 性別 --}}
+        <div class="form-group">
+          @error('sex')<div class="error-message">{{ $message }}</div>
+      @enderror
+          <div class="radio-group2">
+            <label><input type="radio" name="sex" value="1" {{ old('sex') == 1 ? 'checked' : '' }}> 男性</label>
+            <label><input type="radio" name="sex" value="2" {{ old('sex') == 2 ? 'checked' : '' }}> 女性</label>
+            <label><input type="radio" name="sex" value="3" {{ old('sex') == 3 ? 'checked' : '' }}> その他</label>
+          </div>
+        </div>
+
+        {{-- 生年月日 --}}
+        <div class="form-group">
           @if ($errors->has('birth_date'))
-        <div class="text-danger">{{ $errors->first('birth_date') }}</div>
+        <div class="error-message">{{ $errors->first('birth_date') }}</div>
       @endif
+          <label class="form-label">生年月日</label>
+          <div>
+            <select name="old_year" class="form-select">@for($y = 1985; $y <= 2010; $y++)
+        <option value="{{ $y }}">{{ $y }}</option>@endfor
+            </select> 年
+            <select name="old_month" class="form-select">@for($m = 1; $m <= 12; $m++)
+        <option value="{{ sprintf('%02d', $m) }}">{{ $m }}</option>@endfor
+            </select> 月
+            <select name="old_day" class="form-select">@for($d = 1; $d <= 31; $d++)
+        <option value="{{ sprintf('%02d', $d) }}">{{ $d }}</option>@endfor
+            </select> 日
+          </div>
         </div>
 
-        <div class="mt-3">
-          <label class="d-block m-0" style="font-size:13px">役職</label>
-          <input type="radio" name="role" class="admin_role role" value="1">
-          <label style="font-size:13px">教師(国語)</label>
-          <input type="radio" name="role" class="admin_role role" value="2">
-          <label style="font-size:13px">教師(数学)</label>
-          <input type="radio" name="role" class="admin_role role" value="3">
-          <label style="font-size:13px">教師(英語)</label>
-          <input type="radio" name="role" class="other_role role" value="4">
-          <label style="font-size:13px" class="other_role">生徒</label>
-          @error('role')
-        <div class="text-danger">{{ $message }}</div>
-      @enderror
+        {{-- 役職 --}}
+        <div class="form-group">
+          @error('role')<div class="error-message">{{ $message }}</div>@enderror
+          <label class="form-label">役職</label>
+          <div class="radio-group">
+            <label><input type="radio" name="role" class="admin_role" value="1"> 教師(国語)</label>
+            <label><input type="radio" name="role" class="admin_role" value="2"> 教師(数学)</label>
+            <label><input type="radio" name="role" class="admin_role" value="3"> 教師(英語)</label>
+            <label><input type="radio" name="role" class="other_role" value="4"> 生徒</label>
+          </div>
         </div>
 
+        {{-- 選択科目 --}}
         <div class="select_teacher d-none">
           <label class="d-block m-0" style="font-size:13px">選択科目</label>
           @foreach($subjects as $subject)
@@ -188,25 +113,29 @@
       @endforeach
         </div>
 
-        <div class="mt-3">
-          <label class="d-block m-0" style="font-size:13px">パスワード</label>
-          <div class="border-bottom border-primary">
-            <input type="password" class="border-0 w-100 password" name="password">
-          </div>
+
+        {{-- パスワード --}}
+        <div class="form-group">
           @error('password')
-        <div class="text-danger">{{ $message }}</div>
+        <div class="error-message">{{ $message }}</div>
       @enderror
+          <label class="form-label">パスワード</label>
+          <div class="form-input">
+            <input type="password" name="password" class="input-field">
+          </div>
         </div>
 
-        <div class="mt-3">
-          <label class="d-block m-0" style="font-size:13px">確認用パスワード</label>
-          <div class="border-bottom border-primary">
-            <input type="password" class="border-0 w-100 password_confirmation" name="password_confirmation">
-          </div>
+        {{-- 確認用パスワード --}}
+        <div class="form-group">
           @error('password_confirmation')
-        <div class="text-danger">{{ $message }}</div>
+        <div class="error-message">{{ $message }}</div>
       @enderror
+          <label class="form-label">確認用パスワード</label>
+          <div class="form-input">
+            <input type="password" name="password_confirmation" class="input-field">
+          </div>
         </div>
+
         <div class="mt-5 text-right">
           <input type="submit" class="btn btn-primary register_btn" disabled value="新規登録" onclick="return confirm('登録してよろしいですか？')">
         </div>

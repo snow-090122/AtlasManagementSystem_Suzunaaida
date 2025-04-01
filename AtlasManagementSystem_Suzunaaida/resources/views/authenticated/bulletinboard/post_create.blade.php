@@ -17,7 +17,7 @@
         <p class="text-danger">{{ $message }}</p>
       @enderror
           <p class="mb-0">カテゴリー</p>
-          <select class="w-100" name="sub_category_id" required>
+          <select class="w-100" name="sub_category_id">
             <option value="">選択してください</option>
             @foreach ($main_categories as $main_category)
         <optgroup label="{{ $main_category->main_category }}">
@@ -30,6 +30,7 @@
       @endforeach
           </select>
         </div>
+
 
 
         <!-- タイトル -->
@@ -59,44 +60,38 @@
 
     @can('admin')
     <div class="w-25 ml-auto mr-auto">
-      <div class="category_area mt-5 p-5">
-      <!-- メインカテゴリー追加 -->
-      <form action="{{ route('main.category.create') }}" method="post">
+      <div class="category_area mt-5 bg-white border rounded p-4">
+
+      {{-- メインカテゴリー追加 --}}
+      <form action="{{ route('main.category.create') }}" method="post" class="mb-4">
         @csrf
         @error('main_category_name')
-      <p class="text-danger">{{ $message }}</p>
+      <p class="text-danger mb-1">{{ $message }}</p>
     @enderror
         <p class="m-0">メインカテゴリー</p>
         <input type="text" class="w-100" name="main_category_name">
-        <input type="submit" value="追加" class="w-100 btn btn-primary p-0">
+        <input type="submit" value="追加" class="w-100 btn btn-primary p-0 mt-2">
       </form>
 
-      <!-- サブカテゴリー追加 -->
+      {{-- サブカテゴリー追加 --}}
       <form action="{{ route('sub.category.create') }}" method="post">
         @csrf
         @error('sub_category')
-      <p class="text-danger">{{ $message }}</p>
+      <p class="text-danger mb-1">{{ $message }}</p>
     @enderror
         <p class="m-0">サブカテゴリー</p>
         <select class="w-100" name="main_category_id">
-        @if(isset($main_categories) && $main_categories->isNotEmpty())
-      @foreach($main_categories as $main_category)
+        @foreach($main_categories as $main_category)
       <option value="{{ $main_category->id }}">{{ $main_category->main_category }}</option>
     @endforeach
-    @else
-    <option value="" disabled>カテゴリーがありません</option>
-  @endif
         </select>
-        <input type="text" class="w-100" name="sub_category" placeholder="サブカテゴリー名">
-
-        @if($main_categories->isNotEmpty())
-      <input type="submit" value="追加" class="w-100 btn btn-primary p-0">
-    @else
-    <p class="text-danger">メインカテゴリーを先に追加してください。</p>
-  @endif
+        <input type="text" class="w-100 mt-1" name="sub_category" placeholder="サブカテゴリー名">
+        <input type="submit" value="追加" class="w-100 btn btn-primary p-0 mt-2">
       </form>
+
       </div>
     </div>
   @endcan
+
   </div>
 </x-sidebar>
