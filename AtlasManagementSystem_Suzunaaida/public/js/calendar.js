@@ -12,9 +12,16 @@ $(function () {
     $('#input-part').val(partMatch ? partMatch[1] : '');
 
     $('#cancelModal').show();
+    $('#cancelModalOverlay').show();
   });
 
   $('.close-modal').on('click', function () {
     $('#cancelModal').hide();
+    $('#cancelModalOverlay').hide();
+  });
+
+  $('#cancelModalOverlay').on('click', function () {
+    $('#cancelModal').hide();
+    $('#cancelModalOverlay').hide();
   });
 });

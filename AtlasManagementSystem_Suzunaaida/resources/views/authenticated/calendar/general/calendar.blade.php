@@ -17,9 +17,12 @@
 
     </div>
 
-    <!-- キャンセル確認モーダル（これは枠の外でOK） -->
-    <div class="modal" id="cancelModal" style="display:none; position:fixed; z-index:9999; top:30%; left:50%; transform:translate(-50%, -30%); background:white; padding:20px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
-      <div class="modal-content">
+    <!-- モーダルの背景 -->
+    <div class="modal-overlay" id="cancelModalOverlay"></div>
+
+    <!-- キャンセル確認モーダル -->
+    <div class="modal" id="cancelModal">
+      <div class="cancel-modal-content">
         <h5>予約キャンセル確認</h5>
         <p>予約日：<span id="modal-date"></span></p>
         <p>予約時間：<span id="modal-time"></span></p>
@@ -28,8 +31,10 @@
           @csrf
           <input type="hidden" name="date" id="input-date">
           <input type="hidden" name="part" id="input-part">
-          <button type="submit" class="btn btn-danger">キャンセルする</button>
-          <button type="button" class="btn btn-secondary close-modal">閉じる</button>
+          <div class="cancel-modal-buttons">
+            <button type="submit" class="btn btn-danger">キャンセルする</button>
+            <button type="button" class="btn btn-primary close-modal">閉じる</button>
+          </div>
         </form>
       </div>
     </div>
