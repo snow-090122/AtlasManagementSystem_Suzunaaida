@@ -38,13 +38,9 @@ class RegisteredUserController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        // dd($request->all()); // 🔍 フォームの送信データを確認
-
         DB::beginTransaction();
         try {
             $birth_day = $request->birth_date;
-            // dd($birth_day); // 🔍 `YYYY-MM-DD` 形式で正しく取得されているか確認
-
             $user_get = User::create([
                 'over_name' => $request->over_name,
                 'under_name' => $request->under_name,
@@ -58,16 +54,16 @@ class RegisteredUserController extends Controller
             ]);
 
             if ($request->role == 4 && !empty($request->subjects)) {
-                $user_get->subjects()->sync($request->subjects); // ✅ 修正ポイント
+                $user_get->subjects()->sync($request->subjects);
             }
 
-
             DB::commit();
-            return view('auth.login.login');
+            return redirect()->route('login')->with('status', '登録が完了しました。ログインしてください。');
         } catch (\Exception $e) {
-            DB::rollback();
-            dd($e->getMessage());
+            DB::rollBack();
+            return back()->withErrors(['error' => '登録処理中にエラーが発生しました。'])->withInput();
         }
     }
+
 
 }

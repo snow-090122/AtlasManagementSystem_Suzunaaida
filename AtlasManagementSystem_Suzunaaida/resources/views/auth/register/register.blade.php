@@ -137,7 +137,7 @@
         </div>
 
         <div class="mt-5 text-right">
-          <input type="submit" class="btn btn-primary register_btn" disabled value="新規登録" onclick="return confirm('登録してよろしいですか？')">
+          <input type="submit" class="btn btn-primary register_btn" value="新規登録" onclick="return confirm('登録してよろしいですか？')">
         </div>
         <div class="text-center">
           <a href="{{ route('login') }}">ログイン</a>

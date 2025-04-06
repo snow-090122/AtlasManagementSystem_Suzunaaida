@@ -21,14 +21,20 @@ class CalendarView
   function render()
   {
     $html = [];
-    $html[] = '<div class="calendar text-center">';
     $html[] = '<table class="table table-bordered m-auto" style="table-layout: fixed; width: 100%;">';
     $html[] = '<thead>';
     $html[] = '<tr>';
     $weekdays = ['月', '火', '水', '木', '金', '土', '日'];
-    foreach ($weekdays as $day) {
-      $html[] = '<th class="border" style="width: 14.28%;">' . $day . '</th>';
+    foreach ($weekdays as $index => $day) {
+      $class = '';
+      if ($index === 5) {
+        $class = 'saturday';
+      } elseif ($index === 6) {
+        $class = 'sunday';
+      }
+      $html[] = '<th class="border ' . $class . '" style="width: 14.28%;">' . $day . '</th>';
     }
+
     $html[] = '</tr>';
     $html[] = '</thead>';
 
@@ -91,7 +97,6 @@ class CalendarView
     }
     $html[] = '</tbody>';
     $html[] = '</table>';
-    $html[] = '</div>';
     $html[] = '<form action="/reserve/calendar" method="post" id="reserveParts">' . csrf_field() . '</form>';
     $html[] = '<form action="/delete/calendar" method="post" id="deleteParts">' . csrf_field() . '</form>';
 
