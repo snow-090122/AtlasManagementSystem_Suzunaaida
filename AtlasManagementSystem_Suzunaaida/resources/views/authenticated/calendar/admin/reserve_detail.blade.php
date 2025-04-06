@@ -4,8 +4,8 @@
       {{-- 日付と部を表示 --}}
       <p><span>{{ $date }}　{{ $part }}部</span></p>
 
-      <div class="h-75 border p-3 overflow-auto">
-        <table class="table table-bordered text-center">
+      <div class="">
+        <table class="table table-bordered text-center reservation-table">
           <thead>
             <tr>
               <th class="w-25">ID</th>
