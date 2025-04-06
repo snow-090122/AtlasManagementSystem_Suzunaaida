@@ -52,40 +52,38 @@
     </div>
 
     <!-- 右側サイドバー -->
-    <div class="other_area" style="width: 400px;">
-      <div class="border m-4">
+    <div class="other_area">
+      {{-- 投稿ボタン --}}
+      <div class="mb-3">
+        <a href="{{ route('post.input') }}" class="form_btn blue_btn">投稿</a>
+      </div>
 
-        {{-- 投稿ボタン --}}
-        <div class="mb-3">
-          <a href="{{ route('post.input') }}" class="form_btn blue_btn">投稿</a>
-        </div>
-
-        {{-- キーワード検索フォーム --}}
-        <div class="search_group">
-          <input type="text" name="keyword" placeholder="キーワードを検索" class="search_input_flat" form="postSearchRequest">
-          <button type="submit" class="search_button_flat" form="postSearchRequest">検索</button>
-        </div>
+      {{-- キーワード検索フォーム --}}
+      <div class="search_group">
+        <input type="text" name="keyword" placeholder="キーワードを検索" class="search_input_flat" form="postSearchRequest">
+        <button type="submit" class="search_button_flat" form="postSearchRequest">検索</button>
+      </div>
 
 
-        {{-- いいね・自分の投稿 --}}
-        <div class="d-flex gap-2 mb-3">
-          <input type="submit" name="like_posts" value="いいねした投稿" class="like_post_btn" form="postSearchRequest">
-          <button type="button" class="my_post_btn" onclick="window.location.href='{{ route('my.bulletin.board') }}'">自分の投稿</button>
-        </div>
+      {{-- いいね・自分の投稿 --}}
+      <div class="d-flex gap-2 mb-3">
+        <input type="submit" name="like_posts" value="いいねした投稿" class="like_post_btn" form="postSearchRequest">
+        <button type="button" class="my_post_btn" onclick="window.location.href='{{ route('my.bulletin.board') }}'">自分の投稿</button>
+      </div>
 
-        <!-- メインカテゴリー一覧 -->
-        <ul>
-          @foreach($categories as $category)
-        <li class="main_categories" category_id="{{ $category->id }}">
+      <!-- メインカテゴリー一覧 -->
+      <ul>
+        @foreach($categories as $category)
+      <li class="main_categories" category_id="{{ $category->id }}">
         <div class="category-header">
-          <span>{{ $category->main_category }}</span>
-          <i class="fas fa-chevron-down toggle-arrow" id="arrow{{ $category->id }}"></i>
+        <span>{{ $category->main_category }}</span>
+        <i class="fas fa-chevron-down toggle-arrow" id="arrow{{ $category->id }}"></i>
         </div>
 
         <!-- サブカテゴリ -->
         @if($category->subCategories->isNotEmpty())
       <ul class="sub-category-list category_num{{ $category->id }}" style="display: none;">
-        @foreach($category->subCategories as $sub_category)
+      @foreach($category->subCategories as $sub_category)
       <li>
       <a href="{{ route('posts.byCategory', ['sub_category_id' => $sub_category->id]) }}">
       {{ $sub_category->sub_category }}
@@ -94,10 +92,9 @@
     @endforeach
       </ul>
     @endif
-        </li>
-      @endforeach
-        </ul>
-      </div>
+      </li>
+    @endforeach
+      </ul>
     </div>
 
     <form action="{{ route('post.show') }}" method="get" id="postSearchRequest"></form>
