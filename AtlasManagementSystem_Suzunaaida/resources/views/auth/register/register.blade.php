@@ -78,14 +78,23 @@
       @endif
           <label class="form-label">生年月日</label>
           <div>
-            <select name="old_year" class="form-select">@for($y = 1985; $y <= 2010; $y++)
-        <option value="{{ $y }}">{{ $y }}</option>@endfor
+            <select name="old_year" class="form-select">
+              <option value="" disabled selected></option>
+              @for($y = 1985; $y <= 2010; $y++)
+          <option value="{{ $y }}" {{ old('old_year') == $y ? 'selected' : '' }}>{{ $y }}</option>
+        @endfor
             </select> 年
-            <select name="old_month" class="form-select">@for($m = 1; $m <= 12; $m++)
-        <option value="{{ sprintf('%02d', $m) }}">{{ $m }}</option>@endfor
+            <select name="old_month" class="form-select">
+              <option value="" disabled selected></option>
+              @for($m = 1; $m <= 12; $m++)
+          <option value="{{ sprintf('%02d', $m) }}" {{ old('old_month') == sprintf('%02d', $m) ? 'selected' : '' }}>{{ $m }}</option>
+        @endfor
             </select> 月
-            <select name="old_day" class="form-select">@for($d = 1; $d <= 31; $d++)
-        <option value="{{ sprintf('%02d', $d) }}">{{ $d }}</option>@endfor
+            <select name="old_day" class="form-select">
+              <option value="" disabled selected></option>
+              @for($d = 1; $d <= 31; $d++)
+          <option value="{{ sprintf('%02d', $d) }}" {{ old('old_day') == sprintf('%02d', $d) ? 'selected' : '' }}>{{ $d }}</option>
+        @endfor
             </select> 日
           </div>
         </div>
@@ -104,7 +113,7 @@
 
         {{-- 選択科目 --}}
         <div class="select_teacher d-none">
-          <label class="d-block m-0" style="font-size:13px">選択科目</label>
+          <label class="form-label d-block m-0">選択科目</label>
           @foreach($subjects as $subject)
         <div class="">
         <input type="checkbox" name="subjects[]" value="{{ $subject->id }}">

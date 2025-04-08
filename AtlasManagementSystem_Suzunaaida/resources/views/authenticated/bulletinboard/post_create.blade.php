@@ -14,7 +14,7 @@
         <!-- カテゴリー -->
         <div class="">
           @error('sub_category_id')
-        <p class="text-danger">{{ $message }}</p>
+        <p class="error-message">{{ $message }}</p>
       @enderror
           <p class="mb-0">カテゴリー</p>
           <select class="w-100" name="sub_category_id">
@@ -36,16 +36,17 @@
         <!-- タイトル -->
         <div class="mt-3">
           @error('post_title')
-        <p class="text-danger">{{ $message }}</p>
+        <p class="error-message">{{ $message }}</p>
       @enderror
           <p class="mb-0">タイトル</p>
           <input type="text" class="w-100" name="post_title" value="{{ old('post_title') }}">
         </div>
 
+
         <!-- 投稿内容 -->
         <div class="mt-3">
           @error('post_body')
-        <p class="text-danger">{{ $message }}</p>
+        <p class="error-message">{{ $message }}</p>
       @enderror
           <p class="mb-0">投稿内容</p>
           <textarea class="w-100" name="post_body">{{ old('post_body') }}</textarea>
@@ -66,7 +67,7 @@
       <form action="{{ route('main.category.create') }}" method="post" class="mb-4">
         @csrf
         @error('main_category_name')
-      <p class="text-danger mb-1">{{ $message }}</p>
+      <p class="error-message">{{ $message }}</p>
     @enderror
         <p class="m-0">メインカテゴリー</p>
         <input type="text" class="w-100" name="main_category_name">
@@ -77,7 +78,7 @@
       <form action="{{ route('sub.category.create') }}" method="post">
         @csrf
         @error('sub_category')
-      <p class="text-danger mb-1">{{ $message }}</p>
+      <p class="error-message">{{ $message }}</p>
     @enderror
         <p class="m-0">サブカテゴリー</p>
         <select class="w-100" name="main_category_id">

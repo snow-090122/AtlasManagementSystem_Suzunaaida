@@ -55,7 +55,7 @@
       </div>
     @endforeach
     </div>
-    <div class="search_area w-25">
+    <div class="search_area w-25 ml-auto">
       <div class="">
         <p class="search_title">検索</p>
         <div>
@@ -105,7 +105,7 @@
 
             <div class="user-search-group">
               <label class="user-search-label">選択科目</label>
-              <div class="subject_checkboxes">
+              <div class="user-search-subjects-checks">
                 @foreach ($subjects as $subject)
           <label>
             {{ $subject->subject }}

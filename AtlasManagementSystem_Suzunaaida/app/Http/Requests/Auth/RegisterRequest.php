@@ -16,20 +16,21 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'over_name' => 'nullable|string|max:10',
-            'under_name' => 'nullable|string|max:10',
-            'over_name_kana' => 'nullable|string|max:30|regex:/^[ァ-ヶー]+$/u',
-            'under_name_kana' => 'nullable|string|max:30|regex:/^[ァ-ヶー]+$/u',
-            'mail_address' => 'nullable|email|max:100|unique:users,mail_address',
-            'sex' => ['nullable', Rule::in([1, 2, 3])],
+            'over_name' => 'required|string|max:10',
+            'under_name' => 'required|string|max:10',
+            'over_name_kana' => 'required|string|max:30|regex:/^[ァ-ヶー]+$/u',
+            'under_name_kana' => 'required|string|max:30|regex:/^[ァ-ヶー]+$/u',
+            'mail_address' => 'required|email|max:100|unique:users,mail_address',
+            'sex' => ['required', Rule::in([1, 2, 3])],
             'birth_date' => [
-                'nullable',
+                'required',
                 'date',
                 'before_or_equal:' . Carbon::today()->format('Y-m-d'),
                 'after_or_equal:2000-01-01',
             ],
-            'role' => ['nullable', Rule::in([1, 2, 3, 4])],
-            'password' => 'nullable|string|min:8|max:30|confirmed',
+            'role' => ['required', Rule::in([1, 2, 3, 4])],
+            'password' => 'required|string|min:8|max:30|confirmed',
+
         ];
     }
 

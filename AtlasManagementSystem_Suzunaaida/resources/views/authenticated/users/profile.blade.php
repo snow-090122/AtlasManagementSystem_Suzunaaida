@@ -26,8 +26,7 @@
           <div class="subject_checkboxes d-flex gap-3">
             @foreach($subject_lists as $subject_list)
         <label>
-        {{ $subject_list->subject }}
-        <input type="checkbox" name="subjects[]" value="{{ $subject_list->id }}">
+        {{ $subject_list->subject }}<input type="checkbox" name="subjects[]" value="{{ $subject_list->id }}">
         </label>
       @endforeach
           </div>

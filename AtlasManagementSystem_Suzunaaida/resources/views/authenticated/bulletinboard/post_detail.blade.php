@@ -49,7 +49,7 @@
       <div class="comment_container border m-5">
         <div class="comment_area p-3">
           @if ($errors->has('comment'))
-        <ul class="text-danger">
+        <ul class="error-message">
         @foreach ($errors->get('comment') as $message)
       <li>{{ $message }}</li>
     @endforeach
@@ -81,16 +81,14 @@
         @csrf
         <input type="hidden" name="_method" value="PUT">
         <input type="hidden" name="post_id" id="edit-post-id">
-
         <!-- タイトル入力 -->
         <div class="modal-inner-title w-50 m-auto">
-          <ul class="text-danger mb-1" id="error-post-title" style="font-size: 14px;"></ul>
+          <ul class="text-danger mb-1" id="error-post-title" style="font-size:12px;"></ul>
           <input type="text" name="post_title" id="edit-post-title" placeholder="タイトル" class="w-100">
         </div>
-
         <!-- 投稿内容入力 -->
         <div class="modal-inner-body w-50 m-auto">
-          <ul class="text-danger mb-1" id="error-post-body" style="font-size: 14px;"></ul>
+          <ul class="text-danger mb-1" id="error-post-body" style="font-size: 12px;"></ul>
           <textarea name="post_body" id="edit-post-body" placeholder="投稿内容" class="w-100"></textarea>
         </div>
         <div class="w-50 m-auto edit-modal-btn d-flex">
@@ -98,9 +96,12 @@
           <input type="hidden" class="edit-modal-hidden" name="post_id" value="{{ $post->id }}">
           <input type="submit" class="btn btn-primary d-block" value="編集">
         </div>
+      </form>
     </div>
-    {{ csrf_field() }}
-    </form>
+  </div>
+
+  {{ csrf_field() }}
+  </form>
   </div>
   </div>
 
