@@ -21,33 +21,30 @@ class CalendarView
   public function render()
   {
     $html = [];
-    $html[] = '<table class="table table-bordered m-auto" style="table-layout: fixed; width: 100%;">';
-    $html[] = '<thead>';
-    $html[] = '<tr>';
+    $html[] = '<div class="calendar">';
+
+    $html[] = '<div class="calendar-title">' . $this->getTitle() . '</div>';
+
+    $html[] = '<table class="table-calendar">';
+
+    $html[] = '<thead><tr>';
     $weekdays = ['月', '火', '水', '木', '金', '土', '日'];
     foreach ($weekdays as $index => $day) {
-      $class = '';
-      if ($index === 5) {
-        $class = 'saturday';
-      } elseif ($index === 6) {
-        $class = 'sunday';
-      }
-      $html[] = '<th class="border ' . $class . '" style="width: 14.28%;">' . $day . '</th>';
+      $class = ($index === 5) ? 'saturday' : (($index === 6) ? 'sunday' : '');
+      $html[] = '<th class="' . $class . '">' . $day . '</th>';
     }
-    $html[] = '</tr>';
-    $html[] = '</thead>';
+    $html[] = '</tr></thead><tbody>';
 
     $weeks = $this->getWeeks();
-
     foreach ($weeks as $week) {
-      $html[] = '<tr class="' . $week->getClassName() . '">';
-      $days = $week->getDays();
-      foreach ($days as $day) {
+      $html[] = '<tr>';
+
+      foreach ($week->getDays() as $day) {
         $startDay = $this->carbon->format("Y-m-01");
         $date = $day->everyDay();
-        $toDay = $this->carbon->format("Y-m-d");
+        $toDay = Carbon::today()->format("Y-m-d");
 
-        // ➤ 土曜・日曜の class を取得
+        // 土曜・日曜の色付け
         $weekDay = Carbon::parse($date)->dayOfWeek;
         $colorClass = '';
         if ($weekDay === 6) {
@@ -56,15 +53,17 @@ class CalendarView
           $colorClass = 'sunday';
         }
 
-        // ➤ <td> 出力
-        if ($startDay <= $date && $toDay >= $date) {
-          $html[] = '<td class="past-day border ' . $colorClass . '" data-date="' . $date . '">';
-        } else {
-          $html[] = '<td class="border ' . $day->getClassName() . '" data-date="' . $date . '">';
-        }
+        $isPast = $startDay <= $date && $toDay >= $date;
+        $tdClass = $isPast ? 'past-day' : '';
+        $tdClass .= ' ' . $colorClass;
 
-        $html[] = $day->render();
+        $html[] = '<td class="calendar-td ' . $tdClass . '" data-date="' . $date . '">';
+        $html[] = '<div class="date-number">' . $day->render() . '</div>';
+
+        $html[] = '<div class="parts-wrapper">';
         $html[] = $day->dayPartCounts($day->everyDay());
+        $html[] = '</div>';
+
         $html[] = '</td>';
       }
       $html[] = '</tr>';
@@ -72,9 +71,11 @@ class CalendarView
 
     $html[] = '</tbody>';
     $html[] = '</table>';
+    $html[] = '</div>'; // .calendarの閉じタグ
 
     return implode("", $html);
   }
+
 
   protected function getWeeks()
   {

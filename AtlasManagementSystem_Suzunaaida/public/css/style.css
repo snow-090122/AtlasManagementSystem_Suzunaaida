@@ -55,6 +55,101 @@ li {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* ----- スクール予約確認画面 専用調整（管理者・一般共通） ----- */
+.calendar {
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 1000px;
+  margin: 20px auto;
+}
+
+.calendar-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.table-calendar {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table-calendar th,
+.table-calendar td {
+  border: 1px solid #ddd;
+  height: 85px;
+  /* セルの高さ統一 */
+  font-size: 13px;
+  text-align: center;
+  vertical-align: top;
+  padding: 4px;
+  position: relative;
+}
+
+.table-calendar th {
+  height: 35px;
+  /* 曜日のヘッダーを狭く */
+  background-color: #ffffff;
+  font-weight: bold;
+  color: #333;
+}
+
+.table-calendar .date-number {
+  font-weight: bold;
+  font-size: 14px;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.parts-wrapper {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 30px;
+  /* 日付と被らないように余白調整 */
+}
+
+.parts-wrapper a {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.past-day {
+  background-color: #f0f0f0 !important;
+  color: #aaa !important;
+}
+
+.saturday {
+  color: #0000FF !important;
+}
+
+.sunday {
+  color: #FF0000 !important;
+}
+
+.blank-day {
+  background-color: #ddd !important;
+}
+
+.frame-input {
+  width: 36px;
+  height: 20px;
+  font-size: 11px;
+  padding: 0 3px;
+  text-align: center;
+}
+
+.table-calendar .date-number {
+  font-weight: normal !important;
+}
+
 /* スクール予約関連 */
 .saturday {
   color: #0000FF;
@@ -64,9 +159,6 @@ li {
   color: #FF0000;
 }
 
-.day-blank {
-  background: #D3D3D3;
-}
 
 .day-sat {
   color: #0000FF;
@@ -76,13 +168,10 @@ li {
   color: #FF0000;
 }
 
-.past-day {
+/* .past-day {
   background-color: #eeeeee !important;
-}
+} */
 
-.calendar-td {
-  min-width: 100px;
-}
 
 
 .day_part {
@@ -90,32 +179,18 @@ li {
   font-size: 12px;
 }
 
-.adjust-area p {
-  justify-content: space-around;
-}
 
 /*スクール曜日*/
-.saturday {
+/* .saturday {
   color: blue;
 }
 
 .sunday {
   color: red;
 }
+ */
 
-.adjust-table td {
-  padding: 6px !important;
-  min-height: 110px;
-  vertical-align: top;
-}
-
-.adjust-table-btn {
-  text-align: right;
-  margin-top: 15px;
-  padding-right: 0;
-}
-
-.calendar {
+/* .calendar {
   width: 100%;
   max-width: 100%;
   padding: 30px 40px;
@@ -129,23 +204,16 @@ li {
   font-weight: bold;
   margin-bottom: 30px;
   text-align: center;
-}
+} */
 
-.calendar-wrapper {
-  margin-top: 0;
-}
 
-.frame-input {
+/* .frame-input {
   width: 36px;
   height: 20px;
   font-size: 11px;
   padding: 0 3px;
-}
+} */
 
-.adjust-table {
-  width: 100%;
-  table-layout: fixed;
-}
 
 .adjust-part-row {
   display: flex;
