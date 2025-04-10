@@ -14,7 +14,7 @@ class CreateMainCategoriesTable extends Migration
     public function up()
     {
         Schema::create('main_categories', function (Blueprint $table) {
-            $table->increments('id')->unsigned();
+            $table->bigIncrements('id');
             $table->string('main_category', 60)->unique()->index()->comment('メインカテゴリー名');
             $table->timestamps();
         });

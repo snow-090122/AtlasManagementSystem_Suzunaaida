@@ -77,25 +77,30 @@
         <div class="error-message">{{ $errors->first('birth_date') }}</div>
       @endif
           <label class="form-label">生年月日</label>
-          <div>
-            <select name="old_year" class="form-select">
-              <option value="" disabled selected></option>
+          <div class="birthdate-wrap">
+            <select name="old_year" class="birth-select">
+              <option value="">-----</option>
               @for($y = 1985; $y <= 2010; $y++)
           <option value="{{ $y }}" {{ old('old_year') == $y ? 'selected' : '' }}>{{ $y }}</option>
         @endfor
-            </select> 年
-            <select name="old_month" class="form-select">
-              <option value="" disabled selected></option>
+            </select>
+            <span>年</span>
+
+            <select name="old_month" class="birth-select">
+              <option value="">-----</option>
               @for($m = 1; $m <= 12; $m++)
           <option value="{{ sprintf('%02d', $m) }}" {{ old('old_month') == sprintf('%02d', $m) ? 'selected' : '' }}>{{ $m }}</option>
         @endfor
-            </select> 月
-            <select name="old_day" class="form-select">
-              <option value="" disabled selected></option>
+            </select>
+            <span>月</span>
+
+            <select name="old_day" class="birth-select">
+              <option value="">-----</option>
               @for($d = 1; $d <= 31; $d++)
           <option value="{{ sprintf('%02d', $d) }}" {{ old('old_day') == sprintf('%02d', $d) ? 'selected' : '' }}>{{ $d }}</option>
         @endfor
-            </select> 日
+            </select>
+            <span>日</span>
           </div>
         </div>
 

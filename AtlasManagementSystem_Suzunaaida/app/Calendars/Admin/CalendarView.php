@@ -1,5 +1,6 @@
 <?php
 namespace App\Calendars\Admin;
+
 use Carbon\Carbon;
 use App\Models\Users\User;
 
@@ -33,10 +34,8 @@ class CalendarView
       }
       $html[] = '<th class="border ' . $class . '" style="width: 14.28%;">' . $day . '</th>';
     }
-
     $html[] = '</tr>';
     $html[] = '</thead>';
-
 
     $weeks = $this->getWeeks();
 
@@ -48,18 +47,29 @@ class CalendarView
         $date = $day->everyDay();
         $toDay = $this->carbon->format("Y-m-d");
 
+        // ➤ 土曜・日曜の class を取得
+        $weekDay = Carbon::parse($date)->dayOfWeek;
+        $colorClass = '';
+        if ($weekDay === 6) {
+          $colorClass = 'saturday';
+        } elseif ($weekDay === 0) {
+          $colorClass = 'sunday';
+        }
+
+        // ➤ <td> 出力
         if ($startDay <= $date && $toDay >= $date) {
-          $html[] = '<td class="past-day border" data-date="' . $date . '">';
+          $html[] = '<td class="past-day border ' . $colorClass . '" data-date="' . $date . '">';
         } else {
           $html[] = '<td class="border ' . $day->getClassName() . '" data-date="' . $date . '">';
         }
+
         $html[] = $day->render();
         $html[] = $day->dayPartCounts($day->everyDay());
         $html[] = '</td>';
       }
-
       $html[] = '</tr>';
     }
+
     $html[] = '</tbody>';
     $html[] = '</table>';
 

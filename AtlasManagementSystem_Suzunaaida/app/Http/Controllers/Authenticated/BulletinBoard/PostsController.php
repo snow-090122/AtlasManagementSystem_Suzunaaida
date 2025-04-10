@@ -83,15 +83,19 @@ class PostsController extends Controller
     public function postCreate(PostFormRequest $request)
     {
         $user = Auth::user();
+
+        $subCategory = SubCategory::findOrFail($request->sub_category_id);
+        $mainCategoryId = $subCategory->main_category_id;
+
         $post = Post::create([
             'user_id' => $user->id,
             'post_title' => $request->post_title,
-            'post' => $request->post_body
+            'post' => $request->post_body,
+            'post_category_id' => $mainCategoryId,
         ]);
 
         if ($request->has('sub_category_id')) {
-            $subCategoryId = (int) $request->sub_category_id;
-            $post->subCategories()->sync([$subCategoryId]); // 中間テーブルに登録
+            $post->subCategories()->sync([$request->sub_category_id]);
         }
 
         return redirect()->route('post.show')->with('success', '投稿が完了しました！');

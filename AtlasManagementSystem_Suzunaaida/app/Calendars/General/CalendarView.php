@@ -18,6 +18,7 @@ class CalendarView
     return $this->carbon->format('Y年n月');
   }
 
+
   function render()
   {
     $html = [];
@@ -51,10 +52,20 @@ class CalendarView
         $isPast = $currentDate && $currentDate->lte(Carbon::today());
 
         $tdClass = 'calendar-td';
+
         if (!$isCurrentMonth) {
-          $tdClass .= ' bg-secondary';
+          $tdClass .= ' blank-day';
         } elseif ($isPast) {
-          $tdClass .= ' bg-secondary text-white';
+          $colorClass = '';
+          if ($currentDate) {
+            $weekDay = $currentDate->dayOfWeek;
+            if ($weekDay === 0) {
+              $colorClass = 'sunday';
+            } elseif ($weekDay === 6) {
+              $colorClass = 'saturday';
+            }
+          }
+          $tdClass .= ' past-day ' . $colorClass;
         } else {
           $tdClass .= ' ' . $day->getClassName();
         }

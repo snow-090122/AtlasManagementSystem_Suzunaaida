@@ -56,6 +56,14 @@ li {
 }
 
 /* スクール予約関連 */
+.saturday {
+  color: #0000FF;
+}
+
+.sunday {
+  color: #FF0000;
+}
+
 .day-blank {
   background: #D3D3D3;
 }
@@ -69,7 +77,7 @@ li {
 }
 
 .past-day {
-  background: #EEE;
+  background-color: #eeeeee !important;
 }
 
 .calendar-td {
@@ -733,6 +741,30 @@ label {
   gap: 4px;
   font-weight: bold;
   font-size: 13px;
+}
+
+.birthdate-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.birth-select {
+  border: none;
+  border-bottom: 2px solid #03AAD2;
+  padding: 2px 6px;
+  background-color: transparent;
+  font-size: 14px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 80px;
+  text-align: center;
+}
+
+.birth-select:focus {
+  outline: none;
+  border-bottom: 2px solid #007bff;
 }
 
 /* スクール予約詳細画面テーブルデザイン */

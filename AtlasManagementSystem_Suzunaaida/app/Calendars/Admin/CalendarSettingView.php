@@ -47,11 +47,21 @@ class CalendarSettingView
         $startDay = $this->carbon->format("Y-m-01");
         $toDay = $this->carbon->format("Y-m-d");
 
-        if ($startDay <= $day->everyDay() && $toDay >= $day->everyDay()) {
-          $html[] = '<td class="past-day border">';
+        $date = $day->everyDay();
+        $carbonDate = Carbon::parse($date);
+        $weekDay = $carbonDate->dayOfWeek; // 0:日曜, 6:土曜
+        if ($startDay <= $date && $toDay >= $date) {
+          $colorClass = '';
+          if ($weekDay === 0) {
+            $colorClass = 'sunday';
+          } elseif ($weekDay === 6) {
+            $colorClass = 'saturday';
+          }
+          $html[] = '<td class="past-day border ' . $colorClass . '">';
         } else {
           $html[] = '<td class="border ' . $day->getClassName() . '">';
         }
+
         $html[] = $day->render();
         $html[] = '<div class="adjust-area">';
         if ($day->everyDay()) {
