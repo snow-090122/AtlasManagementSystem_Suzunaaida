@@ -168,52 +168,10 @@ li {
   color: #FF0000;
 }
 
-/* .past-day {
-  background-color: #eeeeee !important;
-} */
-
-
-
 .day_part {
   color: #494949;
   font-size: 12px;
 }
-
-
-/*スクール曜日*/
-/* .saturday {
-  color: blue;
-}
-
-.sunday {
-  color: red;
-}
- */
-
-/* .calendar {
-  width: 100%;
-  max-width: 100%;
-  padding: 30px 40px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  background: #fff;
-}
-
-.calendar-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  text-align: center;
-} */
-
-
-/* .frame-input {
-  width: 36px;
-  height: 20px;
-  font-size: 11px;
-  padding: 0 3px;
-} */
-
 
 .adjust-part-row {
   display: flex;
@@ -556,7 +514,7 @@ li {
   gap: 20px;
   padding: 20px;
   border-radius: 10px;
-  overflow-x: hidden;
+  overflow-x: auto;
 }
 
 .reserve_users_area span {
